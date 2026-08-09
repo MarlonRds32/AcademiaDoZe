@@ -4,6 +4,7 @@ using System.Text;
 // Marlon Rodrigues
 namespace AcademiaDoZe.Domain.Enums
 {
+    [Flags]
     public enum MatriculaRestricoes
     {
         None = 0,

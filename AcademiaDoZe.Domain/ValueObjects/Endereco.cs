@@ -1,45 +1,38 @@
-﻿using System;
+﻿using AcademiaDoZe.Domain.Common;
+using AcademiaDoZe.Domain.Entities;
+using AcademiaDoZe.Domain.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 // Marlon Rodrigues
 namespace AcademiaDoZe.Domain.ValueObjects
 {
-    public record Endereco
+
+public record Endereco
+{
+    public Logradouro Logradouro { get; }
+    public string Numero { get; }
+    public string Complemento { get; }
+    private Endereco(Logradouro logradouro, string numero, string complemento)
     {
-        public Cep Cep { get; }
+        Logradouro = logradouro;
+        Numero = numero;
+        Complemento = complemento;
+    }
 
-        public string Pais { get; }
-
-        public string Estado { get; }
-
-        public string Cidade { get; }
-
-        public string Bairro { get; }
-
-        public string NomeLogradouro { get; }
-
-        public int Numero { get; }
-
-        public string Complemento { get; }
-
-        public Endereco(
-            Cep cep,
-            string pais,
-            string estado,
-            string cidade,
-            string bairro,
-            string nomeLogradouro,
-            int numero,
-            string complemento)
+    public static Result<Endereco> Criar(Logradouro logradouro, string numero, string complemento)
         {
-            Cep = cep;
-            Pais = pais;
-            Estado = estado;
-            Cidade = cidade;
-            Bairro = bairro;
-            NomeLogradouro = nomeLogradouro;
-            Numero = numero;
-            Complemento = complemento;
+            var notifications = new List<Notification>();
+            if (logradouro == null)
+                notifications.Add(new Notification("Endereco", "LOGRADOURO_OBRIGATORIO"));
+            if (NormalizadoService.TextoVazioOuNulo(numero))
+                notifications.Add(new Notification("Numero", "NUMERO_OBRIGATORIO"));
+            else
+                numero = NormalizadoService.LimparEspacos(numero);
+            complemento = NormalizadoService.LimparEspacos(complemento);
+            if (notifications.Count != 0)
+                return Result<Endereco>.Failure(notifications);
+            return Result<Endereco>.Success(new Endereco(logradouro!, numero, complemento));
         }
     }
 }
