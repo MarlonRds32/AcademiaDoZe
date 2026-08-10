@@ -3,6 +3,8 @@ using AcademiaDoZe.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using AcademiaDoZe.Domain.Services;
+using AcademiaDoZe.Domain.Common;
 // Marlon Rodrigues
 namespace AcademiaDoZe.Domain.Entities
 {
@@ -33,6 +35,53 @@ namespace AcademiaDoZe.Domain.Entities
             RestricoesMedicas = restricoesMedicas;
             LaudoMedico = laudoMedico;
             ObservacoesRestricoes = observacoesRestricoes;
+        }
+
+        public static Result<Matricula> Criar(
+            int id,
+            Aluno alunoMatricula,
+            MatriculaPlano plano,
+            DateOnly dataInicio,
+            DateOnly dataFim,
+            string objetivo,
+            MatriculaRestricoes restricoesMedicas,
+            Arquivo? laudoMedico,
+            string observacoesRestricoes)
+        {
+            var notifications = new List<Notification>();
+
+            if (alunoMatricula == null)
+                notifications.Add(new Notification("AlunoMatricula", "ALUNO_MATRICULA_OBRIGATORIO"));
+
+            if (!Enum.IsDefined(plano))
+                notifications.Add(new Notification("Plano", "MATRICULA_PLANO_INVALIDO"));
+
+            if (dataInicio == default)
+                notifications.Add(new Notification("DataInicio", "DATA_INICIO_OBRIGATORIA"));
+
+            if (dataFim == default)
+                notifications.Add(new Notification("DataFim", "DATA_FIM_OBRIGATORIA"));
+            else if (dataFim <= dataInicio)
+                notifications.Add(new Notification("DataFim", "DATA_FIM_MENOR_OU_IGUAL_INICIO"));
+
+            objetivo = NormalizadoService.LimparEspacos(objetivo);
+            observacoesRestricoes = NormalizadoService.LimparEspacos(observacoesRestricoes);
+
+            if (notifications.Count != 0)
+                return Result<Matricula>.Failure(notifications);
+
+            var matricula = new Matricula(
+                id,
+                alunoMatricula!,
+                plano,
+                dataInicio,
+                dataFim,
+                objetivo,
+                restricoesMedicas,
+                laudoMedico,
+                observacoesRestricoes);
+
+            return Result<Matricula>.Success(matricula);
         }
     }
 }

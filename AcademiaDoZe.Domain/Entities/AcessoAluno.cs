@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AcademiaDoZe.Domain.Common;
+using AcademiaDoZe.Domain.Services;
 // Marlon Rodrigues
 namespace AcademiaDoZe.Domain.Entities
 {
@@ -12,6 +14,21 @@ namespace AcademiaDoZe.Domain.Entities
         {
             Aluno = aluno;
             DataHora = dataHora;
+        }
+        public static Result<AcessoAluno> Criar(int id, Aluno aluno, DateTime dataHora)
+        {
+            var notifications = new List<Notification>();
+
+            if (aluno == null)
+                notifications.Add(new Notification("Aluno", "ALUNO_OBRIGATORIO"));
+
+            if (dataHora == default)
+                notifications.Add(new Notification("DataHora", "DATA_HORA_OBRIGATORIA"));
+
+            if (notifications.Count != 0)
+                return Result<AcessoAluno>.Failure(notifications);
+
+            return Result<AcessoAluno>.Success(new AcessoAluno(id, aluno!, dataHora));
         }
     }
 }
