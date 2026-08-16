@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 namespace AcademiaDoZe.Domain.Services;
-
+// Marlon Rodrigues
 public static partial class NormalizadoService
 {
     // verifica se o texto é nulo ou vazio

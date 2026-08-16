@@ -10,7 +10,7 @@ using System.Text;
 namespace AcademiaDoZe.Domain.Entities
 {
 
-    public class Colaborador : Pessoa
+    public class Colaborador : Pessoa, IAggregateRoot
     {
         public DateOnly DataAdmissao { get; private set; }
         public ColaboradorTipo Tipo { get; private set; }
@@ -47,7 +47,7 @@ namespace AcademiaDoZe.Domain.Entities
             if (dataAdmissao == default)
                 notifications.Add(new Notification("DataAdmissao", "DATA_ADMISSAO_OBRIGATORIO"));
             else if (dataAdmissao > DateOnly.FromDateTime(DateTime.Today))
-                notifications.Add(new Notification("DataAdmissao", "DATA_ADMISSAO_MAIOR_ATUAL"));
+                notifications.Add(new Notification("DataAdmissao", "DATA_ADMISSAO_MAIOR_QUE_ATUAL"));
             if (!Enum.IsDefined(tipo))
                 notifications.Add(new Notification("Tipo", "TIPO_COLABORADOR_INVALIDO"));
             if (!Enum.IsDefined(vinculo))

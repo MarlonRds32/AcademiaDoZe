@@ -1,7 +1,7 @@
 ﻿    using System;
 using System.Collections.Generic;
 using System.Text;
-
+// Marlon Rodrigues
 namespace AcademiaDoZe.Domain.Common;
 
 public class Result<T>

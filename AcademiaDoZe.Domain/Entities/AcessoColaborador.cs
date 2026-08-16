@@ -6,7 +6,7 @@ using AcademiaDoZe.Domain.Services;
 // Marlon Rodrigues
 namespace AcademiaDoZe.Domain.Entities
 {
-    public class AcessoColaborador : Entity
+    public class AcessoColaborador : Entity, IAggregateRoot
     {
         public Colaborador Colaborador { get; private set; }
         public DateTime DataHora { get; private set; }
@@ -20,10 +20,13 @@ namespace AcademiaDoZe.Domain.Entities
             var notifications = new List<Notification>();
 
             if (colaborador == null)
-                notifications.Add(new Notification("Colaborador", "COLABORADOR_OBRIGATORIO"));
+                notifications.Add(new Notification("Colaborador", "COLABORADOR_INVALIDO"));
 
             if (dataHora == default)
                 notifications.Add(new Notification("DataHora", "DATA_HORA_OBRIGATORIA"));
+            else if (dataHora.TimeOfDay < new TimeSpan(6, 0, 0) || dataHora.TimeOfDay > new TimeSpan(22, 0, 0))
+                notifications.Add(new Notification("DataHora", "DATA_HORA_INTERVALO_INVALIDO"));
+
 
             if (notifications.Count != 0)
                 return Result<AcessoColaborador>.Failure(notifications);

@@ -7,7 +7,7 @@ using AcademiaDoZe.Domain.Services;
 // Marlon Rodrigues
 namespace AcademiaDoZe.Domain.Entities
 {
-    public class Aluno : Pessoa
+    public class Aluno : Pessoa, IAggregateRoot
     {
         private Aluno(int id, string nome,
             Cpf cpf,

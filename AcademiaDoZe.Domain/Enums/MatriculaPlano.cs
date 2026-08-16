@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 // Marlon Rodrigues
-namespace AcademiaDoZe.Domain.Enums
+namespace AcademiaDoZe.Domain.Enums;
+
+public enum MatriculaPlano
 {
-    public enum MatriculaPlano
-    {
-        Mensal = 0,
-        Trimestral = 1,
-        Semestral = 2,
-        Anual = 3
-    }
+    Mensal = 0,
+    Trimestral = 1,
+    Semestral = 2,
+    Anual = 3
 }
