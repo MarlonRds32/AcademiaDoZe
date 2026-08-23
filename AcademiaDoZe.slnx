@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="AcademiaDoZe.Domain.Tests/AcademiaDoZe.Domain.Tests.csproj" Id="7f4d87f9-b152-46e0-a854-bf60de26235b" />
   <Project Path="AcademiaDoZe.Domain/AcademiaDoZe.Domain.csproj" />
+  <Project Path="AcademiaDoZe.Infrastructure.Tests/AcademiaDoZe.Infrastructure.Tests.csproj" Id="ed33b6ad-35a3-4831-ace6-4fc2574b1501" />
+  <Project Path="AcademiaDoZe.Infrastructure/AcademiaDoZe.Infrastructure.csproj" Id="3b833f66-5429-4fa4-b943-fbdfc8bd487a" />
 </Solution>
