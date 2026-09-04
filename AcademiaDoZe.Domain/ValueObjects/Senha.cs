@@ -20,7 +20,7 @@ public record Senha
 
         var textoLimpo = NormalizadoService.LimparTodosEspacos(valor);
 
-        if (textoLimpo.Length != 6)
+        if (textoLimpo.Length < 6)
             return Result<Senha>.Failure("Senha", "SENHA_TAMANHO_MINIMO");
 
         if (!textoLimpo.Any(char.IsUpper))
