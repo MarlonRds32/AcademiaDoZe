@@ -32,6 +32,19 @@ public static class MauiProgram
         builder.Services.AddTransient<ConfigPage>();
 #if DEBUG
         builder.Logging.AddDebug();
+
+        // Registrar ViewModels
+        builder.Services.AddTransient<ColaboradorListViewModel>();
+        builder.Services.AddTransient<ColaboradorViewModel>();
+
+        // Registrar Views
+        builder.Services.AddTransient<ColaboradorListPage>();
+        builder.Services.AddTransient<ColaboradorPage>();
+        builder.Services.AddTransient<AlunoListViewModel>();
+        builder.Services.AddTransient<AlunoViewModel>();
+        builder.Services.AddTransient<AlunoListPage>();
+        builder.Services.AddTransient<AlunoPage>();
+
 #endif
         return builder.Build();
     }
