@@ -29,19 +29,27 @@ Route="MainPage" />
 
     <FlyoutItem Title="Colaboradores">
         <FlyoutItem.Icon>
-            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xea67;" />
+            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xea67;" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         </FlyoutItem.Icon>
         <ShellContent ContentTemplate="{DataTemplate views:ColaboradorListPage}" Route="colaboradores" />
     </FlyoutItem>
 
     <FlyoutItem Title="Alunos">
         <FlyoutItem.Icon>
-            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe7fd;" />
+            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe7fd;" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         </FlyoutItem.Icon>
         <ShellContent ContentTemplate="{DataTemplate views:AlunoListPage}" Route="alunos" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Configurações">
+	<FlyoutItem Title="Matrículas">
+		<FlyoutItem.Icon>
+			<FontImageSource FontFamily="MaterialIcons" Glyph="&#xefec;" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+		</FlyoutItem.Icon>
+		<ShellContent ContentTemplate="{DataTemplate views:MatriculaListPage}" Route="matriculas" />
+	</FlyoutItem>
+
+
+	<FlyoutItem Title="Configurações">
         <FlyoutItem.Icon>
             <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b8;" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
         </FlyoutItem.Icon>
