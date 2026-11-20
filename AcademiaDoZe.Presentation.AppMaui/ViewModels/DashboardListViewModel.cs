@@ -1,4 +1,5 @@
-﻿using AcademiaDoZe.Application.Interfaces;
+﻿using AcademiaDoZe.Presentation.AppMaui.Helpers;
+using AcademiaDoZe.Application.Interfaces;
 using CommunityToolkit.Mvvm.Input;
 namespace AcademiaDoZe.Presentation.AppMaui.ViewModels;
 
@@ -22,7 +23,7 @@ public partial class DashboardListViewModel : BaseViewModel
         _alunoService = alunoService;
         _colaboradorService = colaboradorService;
         _matriculaService = matriculaService;
-        Title = "Dashboard";
+        Title = L.T("strDashboard");
     }
     [RelayCommand]
     private async Task LoadDashboardDataAsync()
@@ -46,19 +47,32 @@ public partial class DashboardListViewModel : BaseViewModel
         catch (OperationCanceledException)
         {
             await Shell.Current.DisplayAlertAsync(
-            "Tempo Esgotado",
-            "A conexão com o banco de dados expirou (timeout). Verifique se o caminho ou os dados de conexão estão corretos.",
+            L.T("strTempoEsgotado"),
+            L.T("msgDashboardTimeout"),
             "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao carregar dados do painel: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroCarregarPainel", ex.Message), "OK");
         }
         finally
         {
             IsBusy = false;
         }
     }
+
+    // Navegação ao tocar nos cards da Dashboard
+    [RelayCommand]
+    private async Task NavigateToLogradourosAsync() => await Shell.Current.GoToAsync("//logradouros");
+
+    [RelayCommand]
+    private async Task NavigateToAlunosAsync() => await Shell.Current.GoToAsync("//alunos");
+
+    [RelayCommand]
+    private async Task NavigateToColaboradoresAsync() => await Shell.Current.GoToAsync("//colaboradores");
+
+    [RelayCommand]
+    private async Task NavigateToMatriculasAsync() => await Shell.Current.GoToAsync("//matriculas");
 
 
 

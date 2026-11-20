@@ -1,3 +1,4 @@
+using AcademiaDoZe.Presentation.AppMaui.Helpers;
 using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Application.Enums;
 using AcademiaDoZe.Application.Interfaces;
@@ -42,7 +43,7 @@ public partial class ColaboradorListViewModel : BaseViewModel
     public ColaboradorListViewModel(IColaboradorService colaboradorService)
     {
         _colaboradorService = colaboradorService;
-        Title = "Colaboradores";
+        Title = L.T("strColaborador");
     }
 
     [RelayCommand]
@@ -54,7 +55,7 @@ public partial class ColaboradorListViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao navegar para tela de cadastro: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroNavegarCadastro", ex.Message), "OK");
         }
     }
 
@@ -69,7 +70,7 @@ public partial class ColaboradorListViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao navegar para tela de edição: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroNavegarEdicao", ex.Message), "OK");
         }
     }
 
@@ -108,7 +109,7 @@ public partial class ColaboradorListViewModel : BaseViewModel
                 var cpfLimpo = new string([.. SearchText.Where(char.IsDigit)]);
                 if (cpfLimpo.Length != 11)
                 {
-                    await Shell.Current.DisplayAlertAsync("Validação", "Para buscar por CPF, informe os 11 dígitos numéricos.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgBuscaCpf11"), "OK");
                     return;
                 }
                 var colaborador = await _colaboradorService.ObterPorCpfAsync(cpfLimpo, cts.Token);
@@ -119,7 +120,7 @@ public partial class ColaboradorListViewModel : BaseViewModel
             {
                 if (!int.TryParse(SearchText.Trim(), out int id) || id <= 0)
                 {
-                    await Shell.Current.DisplayAlertAsync("Validação", "Para buscar por ID, informe um número inteiro positivo válido.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgBuscaIdInteiro"), "OK");
                     return;
                 }
                 var colaborador = await _colaboradorService.ObterPorIdAsync(id, cts.Token);
@@ -151,7 +152,7 @@ public partial class ColaboradorListViewModel : BaseViewModel
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlertAsync("Validação", "Informe um tipo válido para filtrar (ex: Administrador, Atendente, Instrutor).", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgFiltroTipoInvalido"), "OK");
                     return;
                 }
             }
@@ -173,7 +174,7 @@ public partial class ColaboradorListViewModel : BaseViewModel
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlertAsync("Validação", "Informe um vínculo válido para filtrar (ex: CLT, Estágio).", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgFiltroVinculoInvalido"), "OK");
                     return;
                 }
             }
@@ -189,11 +190,11 @@ public partial class ColaboradorListViewModel : BaseViewModel
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A busca de colaboradores expirou. Verifique a conexão com o banco.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgBuscaColaboradoresExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao buscar colaboradores: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroBuscarColaboradores", ex.Message), "OK");
         }
         finally
         {
@@ -232,11 +233,11 @@ public partial class ColaboradorListViewModel : BaseViewModel
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "O carregamento dos colaboradores expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgCargaColaboradoresExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao carregar colaboradores: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroCarregarColaboradores", ex.Message), "OK");
         }
         finally
         {
@@ -251,9 +252,9 @@ public partial class ColaboradorListViewModel : BaseViewModel
         if (colaborador == null)
             return;
         bool confirm = await Shell.Current.DisplayAlertAsync(
-            "Confirmar Exclusão",
-            $"Deseja realmente excluir o colaborador {colaborador.Nome}?",
-            "Sim", "Não");
+            L.T("strConfirmarExclusao"),
+            L.F("msgConfirmaExcluirColaborador", colaborador.Nome),
+            L.T("strSim"), L.T("strNao"));
         if (!confirm)
             return;
         try
@@ -264,16 +265,16 @@ public partial class ColaboradorListViewModel : BaseViewModel
             if (success)
             {
                 Colaboradores.Remove(colaborador);
-                await Shell.Current.DisplayAlertAsync("Sucesso", "Colaborador excluído com sucesso!", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strSucesso"), L.T("msgColaboradorExcluido"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Erro", "Não foi possível excluir o colaborador.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.T("msgColaboradorNaoExcluido"), "OK");
             }
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A exclusão do colaborador expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgExclusaoColaboradorExpirou"), "OK");
         }
         catch (Exception ex)
         {
@@ -281,12 +282,12 @@ public partial class ColaboradorListViewModel : BaseViewModel
                 ex.Message.Contains("constraint", StringComparison.OrdinalIgnoreCase) ||
                 ex.Message.Contains("REFERENCE", StringComparison.OrdinalIgnoreCase))
             {
-                await Shell.Current.DisplayAlertAsync("Não Permitido",
-                    "Este colaborador não pode ser excluído pois possui registros vinculados no sistema (ex: acessos, turmas ou matrículas).", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strNaoPermitido"),
+                    L.T("msgColaboradorVinculado"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao excluir colaborador: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroExcluirColaborador", ex.Message), "OK");
             }
         }
         finally

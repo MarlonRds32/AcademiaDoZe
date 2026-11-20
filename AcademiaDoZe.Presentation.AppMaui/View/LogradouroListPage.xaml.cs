@@ -1,4 +1,5 @@
-﻿using AcademiaDoZe.Presentation.AppMaui.ViewModels;
+﻿using AcademiaDoZe.Presentation.AppMaui.Helpers;
+using AcademiaDoZe.Presentation.AppMaui.ViewModels;
 using AcademiaDoZe.Application.DTOs;
 namespace AcademiaDoZe.Presentation.AppMaui.Views;
 
@@ -26,7 +27,7 @@ public partial class LogradouroListPage : ContentPage
                 await viewModel.EditLogradouroCommand.ExecuteAsync(logradouro);
             }
         }
-        catch (Exception ex) { await DisplayAlertAsync("Erro", $"Erro ao editar logradouro: {ex.Message}", "OK"); }
+        catch (Exception ex) { await DisplayAlertAsync(L.T("strErro"), L.F("msgErroEditarLogradouro", ex.Message), "OK"); }
     }
     private async void OnDeleteButtonClicked(object? sender, EventArgs e)
     {
@@ -37,6 +38,6 @@ public partial class LogradouroListPage : ContentPage
                 await viewModel.DeleteLogradouroCommand.ExecuteAsync(logradouro);
             }
         }
-        catch (Exception ex) { await DisplayAlertAsync("Erro", $"Erro ao excluir logradouro: {ex.Message}", "OK"); }
+        catch (Exception ex) { await DisplayAlertAsync(L.T("strErro"), L.F("msgErroExcluirLogradouro", ex.Message), "OK"); }
     }
 }

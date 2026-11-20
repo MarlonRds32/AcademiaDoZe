@@ -1,3 +1,4 @@
+using AcademiaDoZe.Presentation.AppMaui.Helpers;
 using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Application.Interfaces;
 using CommunityToolkit.Mvvm.Input;
@@ -42,7 +43,7 @@ public partial class MatriculaListViewModel : BaseViewModel
     public MatriculaListViewModel(IMatriculaService matriculaService)
     {
         _matriculaService = matriculaService;
-        Title = "Matrículas";
+        Title = L.T("strMatricula");
     }
 
     [RelayCommand]
@@ -54,7 +55,7 @@ public partial class MatriculaListViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao navegar para tela de cadastro: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroNavegarCadastro", ex.Message), "OK");
         }
     }
 
@@ -70,7 +71,7 @@ public partial class MatriculaListViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao navegar para tela de edição: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroNavegarEdicao", ex.Message), "OK");
         }
     }
 
@@ -122,7 +123,7 @@ public partial class MatriculaListViewModel : BaseViewModel
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlertAsync("Aviso", "Para busca por ID, informe um número válido.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgBuscaIdValido"), "OK");
                 }
             }
             else if (SelectedFilterType == "Id Aluno")
@@ -133,7 +134,7 @@ public partial class MatriculaListViewModel : BaseViewModel
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlertAsync("Aviso", "Para busca por ID do Aluno, informe um número válido.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgBuscaIdAlunoValido"), "OK");
                 }
             }
             else if (SelectedFilterType == "Ativas")
@@ -149,7 +150,7 @@ public partial class MatriculaListViewModel : BaseViewModel
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlertAsync("Aviso", "Para busca por vencimento, informe a quantidade de dias (número inteiro).", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgBuscaVencimentoDias"), "OK");
                 }
             }
 
@@ -165,7 +166,7 @@ public partial class MatriculaListViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao buscar matrículas: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroBuscarMatriculas", ex.Message), "OK");
         }
         finally
         {
@@ -209,7 +210,7 @@ public partial class MatriculaListViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao carregar matrículas: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroCarregarMatriculas", ex.Message), "OK");
         }
         finally
         {
@@ -225,9 +226,9 @@ public partial class MatriculaListViewModel : BaseViewModel
             return;
 
         bool confirm = await Shell.Current.DisplayAlertAsync(
-            "Confirmar Exclusão",
-            $"Deseja realmente excluir a matrícula {matricula.Id}?",
-            "Sim", "Não");
+            L.T("strConfirmarExclusao"),
+            L.F("msgConfirmaExcluirMatricula", matricula.Id),
+            L.T("strSim"), L.T("strNao"));
 
         if (!confirm)
             return;
@@ -241,16 +242,16 @@ public partial class MatriculaListViewModel : BaseViewModel
             if (success)
             {
                 Matriculas.Remove(matricula);
-                await Shell.Current.DisplayAlertAsync("Sucesso", "Matrícula excluída com sucesso!", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strSucesso"), L.T("msgMatriculaExcluida"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Erro", "Não foi possível excluir a matrícula.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.T("msgMatriculaNaoExcluida"), "OK");
             }
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao excluir matrícula: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroExcluirMatricula", ex.Message), "OK");
         }
         finally
         {

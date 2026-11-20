@@ -1,3 +1,4 @@
+using AcademiaDoZe.Presentation.AppMaui.Helpers;
 using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Application.Interfaces;
 using CommunityToolkit.Mvvm.Input;
@@ -41,7 +42,7 @@ public partial class AlunoListViewModel : BaseViewModel
     public AlunoListViewModel(IAlunoService alunoService)
     {
         _alunoService = alunoService;
-        Title = "Alunos";
+        Title = L.T("strAluno");
     }
 
     [RelayCommand]
@@ -53,7 +54,7 @@ public partial class AlunoListViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao navegar para tela de cadastro: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroNavegarCadastro", ex.Message), "OK");
         }
     }
 
@@ -68,7 +69,7 @@ public partial class AlunoListViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao navegar para tela de edição: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroNavegarEdicao", ex.Message), "OK");
         }
     }
 
@@ -107,7 +108,7 @@ public partial class AlunoListViewModel : BaseViewModel
                 var cpfLimpo = new string([.. SearchText.Where(char.IsDigit)]);
                 if (cpfLimpo.Length != 11)
                 {
-                    await Shell.Current.DisplayAlertAsync("Validação", "Para buscar por CPF, informe os 11 dígitos numéricos.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgBuscaCpf11"), "OK");
                     return;
                 }
                 var aluno = await _alunoService.ObterPorCpfAsync(cpfLimpo, cts.Token);
@@ -118,7 +119,7 @@ public partial class AlunoListViewModel : BaseViewModel
             {
                 if (!int.TryParse(SearchText.Trim(), out int id) || id <= 0)
                 {
-                    await Shell.Current.DisplayAlertAsync("Validação", "Para buscar por ID, informe um número inteiro positivo válido.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgBuscaIdInteiro"), "OK");
                     return;
                 }
                 var aluno = await _alunoService.ObterPorIdAsync(id, cts.Token);
@@ -144,11 +145,11 @@ public partial class AlunoListViewModel : BaseViewModel
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A busca de alunos expirou. Verifique a conexão com o banco.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgBuscaAlunosExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao buscar alunos: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroBuscarAlunos", ex.Message), "OK");
         }
         finally
         {
@@ -187,11 +188,11 @@ public partial class AlunoListViewModel : BaseViewModel
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "O carregamento dos alunos expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgCargaAlunosExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao carregar alunos: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroCarregarAlunos", ex.Message), "OK");
         }
         finally
         {
@@ -206,9 +207,9 @@ public partial class AlunoListViewModel : BaseViewModel
         if (aluno == null)
             return;
         bool confirm = await Shell.Current.DisplayAlertAsync(
-            "Confirmar Exclusão",
-            $"Deseja realmente excluir o aluno {aluno.Nome}?",
-            "Sim", "Não");
+            L.T("strConfirmarExclusao"),
+            L.F("msgConfirmaExcluirAluno", aluno.Nome),
+            L.T("strSim"), L.T("strNao"));
         if (!confirm)
             return;
         try
@@ -219,16 +220,16 @@ public partial class AlunoListViewModel : BaseViewModel
             if (success)
             {
                 Alunos.Remove(aluno);
-                await Shell.Current.DisplayAlertAsync("Sucesso", "Aluno excluído com sucesso!", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strSucesso"), L.T("msgAlunoExcluido"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Erro", "Não foi possível excluir o aluno.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.T("msgAlunoNaoExcluido"), "OK");
             }
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A exclusão do aluno expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgExclusaoAlunoExpirou"), "OK");
         }
         catch (Exception ex)
         {
@@ -236,12 +237,12 @@ public partial class AlunoListViewModel : BaseViewModel
                 ex.Message.Contains("constraint", StringComparison.OrdinalIgnoreCase) ||
                 ex.Message.Contains("REFERENCE", StringComparison.OrdinalIgnoreCase))
             {
-                await Shell.Current.DisplayAlertAsync("Não Permitido",
-                    "Este aluno não pode ser excluído pois possui registros vinculados no sistema (ex: acessos, turmas ou matrículas).", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strNaoPermitido"),
+                    L.T("msgAlunoVinculado"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao excluir aluno: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroExcluirAluno", ex.Message), "OK");
             }
         }
         finally

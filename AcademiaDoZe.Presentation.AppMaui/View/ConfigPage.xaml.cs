@@ -1,16 +1,53 @@
-﻿using AcademiaDoZe.Application.Enums;
+﻿using AcademiaDoZe.Presentation.AppMaui.Helpers;
+using AcademiaDoZe.Application.Enums;
 using AcademiaDoZe.Presentation.AppMaui.Message;
 using CommunityToolkit.Mvvm.Messaging;
 namespace AcademiaDoZe.Presentation.AppMaui.Views;
 
 public partial class ConfigPage : ContentPage
 {
+    private bool _isCarregando = true;
+
     public ConfigPage()
     {
         InitializeComponent();
         CarregarTema();
         CarregarBanco();
+        CarregarCultura();
+        _isCarregando = false;
     }
+    #region Cultura
+    private void CarregarCultura()
+    {
+        // uso de expressão switch para carregar o índice selecionado
+        var culturaAtual = Preferences.Get("Cultura", "pt-BR");
+        CulturaPicker.SelectedIndex = culturaAtual switch
+        {
+            "en-US" => 0,
+            "es-ES" => 1,
+            "pt-BR" => 2,
+            _ => 2
+        };
+    }
+
+    private void OnCulturaSelectedIndexChanged(object? sender, EventArgs e)
+    {
+        if (_isCarregando || CulturaPicker.SelectedIndex < 0)
+            return;
+
+        string selected = CulturaPicker.SelectedIndex switch
+        {
+            0 => "en-US",
+            1 => "es-ES",
+            2 => "pt-BR",
+            _ => "pt-BR"
+        };
+        Preferences.Set("Cultura", selected);
+
+        // Disparar mensagem com o idioma selecionado - App.xaml.cs irá capturar esta mensagem e aplicar
+        WeakReferenceMessenger.Default.Send(new CulturaPreferencesUpdatedMessage(selected));
+    }
+    #endregion
     #region Tema
     private void CarregarTema()
     {
@@ -23,7 +60,7 @@ public partial class ConfigPage : ContentPage
         Preferences.Set("Tema", selectedTheme);
         // Disparar mensagem para uso na recarga dinâmica
         WeakReferenceMessenger.Default.Send(new TemaPreferencesUpdatedMessage("TemaAlterado"));
-        await DisplayAlertAsync("Sucesso", "Dados salvos com sucesso!", "OK");
+        await DisplayAlertAsync(L.T("strSucesso"), L.T("msgDadosSalvos"), "OK");
         // Navegar para dashboard
         await Shell.Current.GoToAsync("//dashboard");
     }
@@ -60,7 +97,7 @@ public partial class ConfigPage : ContentPage
                 SqliteContainer.IsVisible = true;
                 ServidorBancoGrid.IsVisible = false;
                 CredenciaisGrid.IsVisible = false;
-                ComplementoLabel.Text = "Complemento (ex: Default Timeout=5;)";
+                ComplementoLabel.Text = L.T("strComplementoSqlite");
                 ComplementoEntry.Placeholder = "Default Timeout=5;";
                 var defaultSqlitePath = DeviceInfo.Platform == DevicePlatform.WinUI
                 ? @"C:\DEV\AcademiaDoZe\db_academia_do_ze.db"
@@ -76,7 +113,7 @@ public partial class ConfigPage : ContentPage
                 ServidorEntry.Placeholder = "Ex: 172.24.32.1 ou localhost";
                 BancoEntry.Placeholder = "Ex: db_academia_do_ze";
                 UsuarioEntry.Placeholder = "Ex: sa";
-                ComplementoLabel.Text = "Complemento (SSL / Timeout / Criptografia)";
+                ComplementoLabel.Text = L.T("strComplementoSqlServer");
                 ComplementoEntry.Placeholder = "TrustServerCertificate=True;Encrypt=True;Connect Timeout=30;Connection Timeout=30;";
                 ServidorEntry.Text = Preferences.Get("SqlServer_Servidor", Preferences.Get("Servidor", "172.24.32.1"));
                 BancoEntry.Text = Preferences.Get("SqlServer_Banco", Preferences.Get("Banco", "db_academia_do_ze"));
@@ -92,7 +129,7 @@ public partial class ConfigPage : ContentPage
                 ServidorEntry.Placeholder = "Ex: 10.30.21.16 ou localhost";
                 BancoEntry.Placeholder = "Ex: db_academia_do_ze";
                 UsuarioEntry.Placeholder = "Ex: root";
-                ComplementoLabel.Text = "Complemento (Porta / Timeout)";
+                ComplementoLabel.Text = L.T("strComplementoMySql");
                 ComplementoEntry.Placeholder = "Connection Timeout=30;Default Command Timeout=30;";
                 ServidorEntry.Text = Preferences.Get("MySql_Servidor", Preferences.Get("Servidor", "10.30.21.16"));
                 BancoEntry.Text = Preferences.Get("MySql_Banco", Preferences.Get("Banco", "db_academia_do_ze"));
@@ -108,14 +145,14 @@ public partial class ConfigPage : ContentPage
         if (DatabaseTypePicker.SelectedItem is not string selectedTypeStr ||
         !Enum.TryParse<AppDatabaseType>(selectedTypeStr, out var selectedType))
         {
-            await DisplayAlertAsync("Aviso", "Selecione um tipo de banco de dados válido.", "OK");
+            await DisplayAlertAsync(L.T("strAviso"), L.T("msgSelecioneBanco"), "OK");
             return;
         }
         if (selectedType == AppDatabaseType.Sqlite)
         {
             if (string.IsNullOrWhiteSpace(SqliteCaminhoEntry.Text))
             {
-                await DisplayAlertAsync("Validação", "Informe o caminho do arquivo do banco SQLite.", "OK");
+                await DisplayAlertAsync(L.T("strValidacao"), L.T("msgInformeCaminhoSqlite"), "OK");
                 return;
             }
             var caminho = SqliteCaminhoEntry.Text.Trim();
@@ -130,17 +167,17 @@ public partial class ConfigPage : ContentPage
         {
             if (string.IsNullOrWhiteSpace(ServidorEntry.Text))
             {
-                await DisplayAlertAsync("Validação", "Informe o servidor do banco de dados.", "OK");
+                await DisplayAlertAsync(L.T("strValidacao"), L.T("msgInformeServidor"), "OK");
                 return;
             }
             if (string.IsNullOrWhiteSpace(BancoEntry.Text))
             {
-                await DisplayAlertAsync("Validação", "Informe o nome do banco de dados.", "OK");
+                await DisplayAlertAsync(L.T("strValidacao"), L.T("msgInformeBanco"), "OK");
                 return;
             }
             if (string.IsNullOrWhiteSpace(UsuarioEntry.Text))
             {
-                await DisplayAlertAsync("Validação", "Informe o usuário do banco de dados.", "OK");
+                await DisplayAlertAsync(L.T("strValidacao"), L.T("msgInformeUsuario"), "OK");
                 return;
             }
             var servidor = ServidorEntry.Text.Trim();
@@ -164,7 +201,7 @@ public partial class ConfigPage : ContentPage
         Preferences.Set("DatabaseType", selectedType.ToString());
         // Disparar a mensagem para recarga dinâmica (processada pelo ConfigurationHelper)
         WeakReferenceMessenger.Default.Send(new BancoPreferencesUpdatedMessage("BancoAlterado"));
-        await DisplayAlertAsync("Sucesso", $"Configurações do banco de dados ({selectedType}) salvas com sucesso!", "OK");
+        await DisplayAlertAsync(L.T("strSucesso"), L.F("msgBancoSalvo", selectedType), "OK");
         // Navegar para dashboard
         await Shell.Current.GoToAsync("//dashboard");
     }

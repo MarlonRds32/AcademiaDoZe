@@ -1,3 +1,4 @@
+using AcademiaDoZe.Presentation.AppMaui.Helpers;
 using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Presentation.AppMaui.ViewModels;
 
@@ -32,7 +33,7 @@ public partial class ColaboradorListPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Erro", $"Erro ao editar colaborador: {ex.Message}", "OK");
+            await DisplayAlertAsync(L.T("strErro"), L.F("msgErroEditarColaborador", ex.Message), "OK");
         }
     }
 
@@ -47,7 +48,7 @@ public partial class ColaboradorListPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Erro", $"Erro ao excluir colaborador: {ex.Message}", "OK");
+            await DisplayAlertAsync(L.T("strErro"), L.F("msgErroExcluirColaborador", ex.Message), "OK");
         }
     }
 }

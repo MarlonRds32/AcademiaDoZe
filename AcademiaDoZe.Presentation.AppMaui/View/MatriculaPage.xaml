@@ -5,9 +5,11 @@
              xmlns:vm="clr-namespace:AcademiaDoZe.Presentation.AppMaui.ViewModels"
              xmlns:converters="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Converters"
              x:DataType="vm:MatriculaViewModel"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             xmlns:helpers="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Helpers">
 
     <ContentPage.Resources>
+        <converters:DateOnlyShortToStringConverter x:Key="DateOnlyShort" />
         <converters:FotoToImageSourceConverter x:Key="FotoToImageSourceConverter" />
         <converters:DateOnlyToDateTimeConverter x:Key="DateOnlyConverter" />
         <converters:EnumDisplayConverter x:Key="EnumDisplay" />
@@ -20,13 +22,13 @@
             <Border Style="{StaticResource CardBorder}" Margin="15,0">
                 <StackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="Aluno da Matrícula" Style="{StaticResource SubHeadline}" VerticalOptions="Center" />
-                        <Label Grid.Column="1" Text="{Binding Matricula.Id, StringFormat='ID: {0}'}" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" IsVisible="{Binding IsEditMode}" VerticalOptions="Center"/>
+                        <Label Grid.Column="0" Text="{helpers:Translate strAlunoMatricula}" Style="{StaticResource SubHeadline}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" IsVisible="{Binding IsEditMode}" VerticalOptions="Center"><Label.FormattedText><FormattedString><Span Text="ID: "/><Span Text="{Binding Matricula.Id}"/></FormattedString></Label.FormattedText></Label>
                     </Grid>
 
                     <!-- Busca CPF -->
                     <StackLayout Spacing="5">
-                        <Label Text="CPF do Aluno"/>
+                        <Label Text="{helpers:Translate strCpfAluno}"/>
                         <Grid ColumnDefinitions="*,Auto">
                             <Entry Grid.Column="0"
                                    Text="{Binding Matricula.AlunoMatricula.Cpf}"
@@ -37,13 +39,13 @@
                                    ClearButtonVisibility="WhileEditing"
                                    ReturnCommand="{Binding SearchByCpfCommand}" />
                             <Button Grid.Column="1"
-                                    Text="Buscar"
+                                    Text="{helpers:Translate strBuscar}"
                                     Command="{Binding SearchByCpfCommand}"
                                     Style="{StaticResource ButtonPrimary}"
                                     HeightRequest="40"
                                     Padding="15,0">
                                 <Button.ImageSource>
-                                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" />
+                                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" Color="{AppThemeBinding Light={StaticResource Lime}, Dark={StaticResource Ink}}" />
                                 </Button.ImageSource>
                             </Button>
                         </Grid>
@@ -53,7 +55,7 @@
                     <Border Margin="0,5,0,0" Padding="12" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#FFF3CD, Dark=#332701}" IsVisible="{Binding HasNoAlunoVinculado}">
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center">
                             <Label Grid.Column="0" Text="&#xe002;" FontFamily="MaterialIcons" TextColor="#D97706" VerticalOptions="Center" FontSize="20"/>
-                            <Label Grid.Column="1" Text="Nenhum aluno vinculado. Digite o CPF acima e clique em 'Buscar' para selecionar o aluno." TextColor="{AppThemeBinding Light=#92400E, Dark=#FCD34D}" VerticalOptions="Center" FontSize="13" LineBreakMode="WordWrap"/>
+                            <Label Grid.Column="1" Text="{helpers:Translate strSemAluno}" TextColor="{AppThemeBinding Light=#92400E, Dark=#FCD34D}" VerticalOptions="Center" FontSize="13" LineBreakMode="WordWrap"/>
                         </Grid>
                     </Border>
 
@@ -61,7 +63,7 @@
                     <Border Margin="0,5,0,0" Padding="12" StrokeShape="RoundRectangle 10" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}" IsVisible="{Binding HasAlunoVinculado}">
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14" VerticalOptions="Center">
                             <!-- Foto circular com borda de destaque -->
-                            <Border Grid.Column="0" HeightRequest="64" WidthRequest="64" StrokeShape="RoundRectangle 32" Stroke="{StaticResource Primary}" StrokeThickness="2" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Border Grid.Column="0" HeightRequest="64" WidthRequest="64" StrokeShape="RoundRectangle 32" Stroke="{StaticResource Lime}" StrokeThickness="3" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center">
                                 <Image Source="{Binding Matricula.AlunoMatricula.Foto, Converter={StaticResource FotoToImageSourceConverter}}"
                                        Aspect="AspectFill" HeightRequest="64" WidthRequest="64"/>
                             </Border>
@@ -69,8 +71,8 @@
                             <!-- Dados do aluno -->
                             <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
                                 <Label Text="{Binding Matricula.AlunoMatricula.Nome}" FontAttributes="Bold" FontSize="15" LineBreakMode="TailTruncation"/>
-                                <Label Text="{Binding Matricula.AlunoMatricula.Cpf, StringFormat='CPF: {0}'}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
-                                <Label Text="{Binding Matricula.AlunoMatricula.DataNascimento, StringFormat='Nascimento: {0:dd/MM/yyyy}'}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+                                <Label FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"><Label.FormattedText><FormattedString><Span Text="CPF: "/><Span Text="{Binding Matricula.AlunoMatricula.Cpf}"/></FormattedString></Label.FormattedText></Label>
+                                <Label FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"><Label.FormattedText><FormattedString><Span Text="{helpers:Translate strNascimento}"/><Span Text=": "/><Span Text="{Binding Matricula.AlunoMatricula.DataNascimento, Converter={StaticResource DateOnlyShort}}"/></FormattedString></Label.FormattedText></Label>
                             </VerticalStackLayout>
                         </Grid>
                     </Border>
@@ -79,7 +81,7 @@
                     <Border Margin="0,5,0,0" Padding="10" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#451A03}" IsVisible="{Binding IsMenor16}">
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
                             <Label Grid.Column="0" Text="&#xe002;" FontFamily="MaterialIcons" TextColor="#D97706" FontSize="18" VerticalOptions="Center"/>
-                            <Label Grid.Column="1" Text="Aluno menor de 16 anos: apresentação de laudo médico é obrigatória por lei." TextColor="{AppThemeBinding Light=#92400E, Dark=#FDE68A}" FontSize="12" VerticalOptions="Center" LineBreakMode="WordWrap"/>
+                            <Label Grid.Column="1" Text="{helpers:Translate strMenor16}" TextColor="{AppThemeBinding Light=#92400E, Dark=#FDE68A}" FontSize="12" VerticalOptions="Center" LineBreakMode="WordWrap"/>
                         </Grid>
                     </Border>
                 </StackLayout>
@@ -88,12 +90,12 @@
             <!-- Card 2: Plano e Vigência -->
             <Border Style="{StaticResource CardBorder}" Margin="15,0">
                 <StackLayout Spacing="15">
-                    <Label Text="Plano e Vigência" Style="{StaticResource SubHeadline}" />
+                    <Label Text="{helpers:Translate strPlanoVigencia}" Style="{StaticResource SubHeadline}" />
 
                     <!-- Plano e datas em linha -->
                     <Grid ColumnDefinitions="2*,1*,1*" ColumnSpacing="10">
                         <VerticalStackLayout Grid.Column="0" Spacing="4">
-                            <Label Text="Tipo de Plano" />
+                            <Label Text="{helpers:Translate strTipoPlano}" />
                             <Picker x:Name="PlanoPicker" ItemsSource="{Binding PlanoTipos}" SelectedItem="{Binding Matricula.Plano}" SelectedIndexChanged="PlanoPicker_SelectedIndexChanged">
                                 <Picker.ItemDisplayBinding>
                                     <Binding Converter="{StaticResource EnumDisplay}" />
@@ -102,20 +104,20 @@
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Grid.Column="1" Spacing="4">
-                            <Label Text="Data de Início" />
-                            <DatePicker x:Name="InicioDatePicker" Format="dd/MM/yyyy" Date="{Binding Matricula.DataInicio, Converter={StaticResource DateOnlyConverter}, Mode=TwoWay}" DateSelected="InicioDatePicker_DateSelected" />
+                            <Label Text="{helpers:Translate strDataInicio}" />
+                            <DatePicker x:Name="InicioDatePicker" Format="{helpers:Translate FormatoDataCurta}" Date="{Binding Matricula.DataInicio, Converter={StaticResource DateOnlyConverter}, Mode=TwoWay}" DateSelected="InicioDatePicker_DateSelected" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Grid.Column="2" Spacing="4">
-                            <Label Text="Término" />
-                            <DatePicker x:Name="FimDatePicker" Format="dd/MM/yyyy" Date="{Binding Matricula.DataFim, Converter={StaticResource DateOnlyConverter}, Mode=TwoWay}" IsEnabled="False" />
+                            <Label Text="{helpers:Translate strTermino}" />
+                            <DatePicker x:Name="FimDatePicker" Format="{helpers:Translate FormatoDataCurta}" Date="{Binding Matricula.DataFim, Converter={StaticResource DateOnlyConverter}, Mode=TwoWay}" IsEnabled="False" />
                         </VerticalStackLayout>
                     </Grid>
 
                     <!-- Objetivo -->
                     <StackLayout Spacing="5">
-                        <Label Text="Objetivo da Matrícula" />
-                        <Entry Text="{Binding Matricula.Objetivo}" Placeholder="Ex: Condicionamento, hipertrofia, saúde..." MaxLength="200" ClearButtonVisibility="WhileEditing" />
+                        <Label Text="{helpers:Translate strObjetivoMatricula}" />
+                        <Entry Text="{Binding Matricula.Objetivo}" Placeholder="{helpers:Translate strObjetivoExemplo}" MaxLength="200" ClearButtonVisibility="WhileEditing" />
                     </StackLayout>
                 </StackLayout>
             </Border>
@@ -123,8 +125,8 @@
             <!-- Card 3: Condições de Saúde e Restrições -->
             <Border Style="{StaticResource CardBorder}" Margin="15,0">
                 <StackLayout Spacing="12">
-                    <Label Text="Condições de Saúde e Restrições" Style="{StaticResource SubHeadline}" />
-                    <Label Text="Selecione as condições médicas diagnosticadas:" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+                    <Label Text="{helpers:Translate strCondicoesSaude}" Style="{StaticResource SubHeadline}" />
+                    <Label Text="{helpers:Translate strSelecioneCondicoes}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
 
                     <CollectionView ItemsSource="{Binding RestricoesMulti}" SelectionMode="None" HeightRequest="160">
                         <CollectionView.ItemsLayout>
@@ -141,15 +143,15 @@
                     </CollectionView>
 
                     <StackLayout Spacing="5">
-                        <Label Text="Observações e Recomendações" />
-                        <Entry Text="{Binding Matricula.ObservacoesRestricoes}" Placeholder="Descreva cuidados específicos..." MaxLength="500" ClearButtonVisibility="WhileEditing" />
+                        <Label Text="{helpers:Translate strObservacoes}" />
+                        <Entry Text="{Binding Matricula.ObservacoesRestricoes}" Placeholder="{helpers:Translate strDescrevaCuidados}" MaxLength="500" ClearButtonVisibility="WhileEditing" />
                     </StackLayout>
 
                     <!-- Alerta caso haja restrições médicas -->
                     <Border Margin="0,5,0,0" Padding="10" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#451A03}" IsVisible="{Binding HasRestricoes}">
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
                             <Label Grid.Column="0" Text="&#xe002;" FontFamily="MaterialIcons" TextColor="#D97706" FontSize="18" VerticalOptions="Center"/>
-                            <Label Grid.Column="1" Text="Restrições médicas selecionadas: apresentação de laudo médico é mandatória." TextColor="{AppThemeBinding Light=#92400E, Dark=#FDE68A}" FontSize="12" VerticalOptions="Center" LineBreakMode="WordWrap"/>
+                            <Label Grid.Column="1" Text="{helpers:Translate strRestricoesLaudo}" TextColor="{AppThemeBinding Light=#92400E, Dark=#FDE68A}" FontSize="12" VerticalOptions="Center" LineBreakMode="WordWrap"/>
                         </Grid>
                     </Border>
                 </StackLayout>
@@ -159,36 +161,36 @@
             <Border Style="{StaticResource CardBorder}" Margin="15,0">
                 <StackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                        <Label Grid.Column="0" Text="Laudo Médico" Style="{StaticResource SubHeadline}" VerticalOptions="Center" />
+                        <Label Grid.Column="0" Text="{helpers:Translate strLaudoMedico}" Style="{StaticResource SubHeadline}" VerticalOptions="Center" />
 
                         <!-- Badges de status -->
                         <Border Grid.Column="1" Padding="8,4" StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#DCFCE7, Dark=#064E3B}" IsVisible="{Binding HasLaudo}">
-                            <Label Text="✓ Laudo Anexado" FontSize="11" TextColor="{AppThemeBinding Light=#166534, Dark=#86EFAC}" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Translate strLaudoAnexado}" FontSize="11" TextColor="{AppThemeBinding Light=#166534, Dark=#86EFAC}" FontAttributes="Bold"/>
                         </Border>
                         <Border Grid.Column="1" Padding="8,4" StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#7F1D1D}" IsVisible="{Binding LaudoPendente}">
-                            <Label Text="⚠ Laudo Obrigatório" FontSize="11" TextColor="{AppThemeBinding Light=#991B1B, Dark=#FCA5A5}" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Translate strLaudoObrigatorio}" FontSize="11" TextColor="{AppThemeBinding Light=#991B1B, Dark=#FCA5A5}" FontAttributes="Bold"/>
                         </Border>
                         <Border Grid.Column="1" Padding="8,4" StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray900}}" IsVisible="{Binding LaudoOpcional}">
-                            <Label Text="Opcional" FontSize="11" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+                            <Label Text="{helpers:Translate strOpcional}" FontSize="11" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
                         </Border>
                     </Grid>
 
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16" VerticalOptions="Center">
                         <!-- Imagem do laudo -->
-                        <Border Grid.Column="0" HeightRequest="100" WidthRequest="100" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}" Stroke="{StaticResource Gray300}">
+                        <Border Grid.Column="0" HeightRequest="100" WidthRequest="100" StrokeShape="RoundRectangle 8" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}" Stroke="{StaticResource Lime}" StrokeThickness="3">
                             <Image Source="{Binding Matricula.LaudoMedico, Converter={StaticResource FotoToImageSourceConverter}}" Aspect="AspectFill" HeightRequest="100" WidthRequest="100" />
                         </Border>
 
                         <!-- Botões de ação do laudo -->
                         <VerticalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
-                            <Button Text="Selecionar Imagem" Command="{Binding SelecionarFotoCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="40" Padding="12,0">
+                            <Button Text="{helpers:Translate strSelecionarImagem}" Command="{Binding SelecionarFotoCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="40" Padding="12,0">
                                 <Button.ImageSource>
-                                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe226;" />
+                                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe226;" Color="{AppThemeBinding Light={StaticResource Lime}, Dark={StaticResource Ink}}" />
                                 </Button.ImageSource>
                             </Button>
-                            <Button Text="Remover Laudo" Command="{Binding RemoverLaudoCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="40" Padding="12,0" IsVisible="{Binding HasLaudo}">
+                            <Button Text="{helpers:Translate strRemoverLaudo}" Command="{Binding RemoverLaudoCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="40" Padding="12,0" IsVisible="{Binding HasLaudo}">
                                 <Button.ImageSource>
-                                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe872;" />
+                                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe872;" Color="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}" />
                                 </Button.ImageSource>
                             </Button>
                         </VerticalStackLayout>
@@ -198,14 +200,14 @@
 
             <!-- Ações: Cancelar e Salvar -->
             <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="15,10">
-                <Button Grid.Column="0" Text="Cancelar" Command="{Binding CancelCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="50">
+                <Button Grid.Column="0" Text="{helpers:Translate strCancelar}" Command="{Binding CancelCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="50">
                     <Button.ImageSource>
-                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe5cd;" />
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe5cd;" Color="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}" />
                     </Button.ImageSource>
                 </Button>
-                <Button Grid.Column="1" Text="Salvar" Command="{Binding SaveMatriculaCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="50">
+                <Button Grid.Column="1" Text="{helpers:Translate strSalvar}" Command="{Binding SaveMatriculaCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="50">
                     <Button.ImageSource>
-                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe161;" />
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe161;" Color="{AppThemeBinding Light={StaticResource Lime}, Dark={StaticResource Ink}}" />
                     </Button.ImageSource>
                 </Button>
             </Grid>

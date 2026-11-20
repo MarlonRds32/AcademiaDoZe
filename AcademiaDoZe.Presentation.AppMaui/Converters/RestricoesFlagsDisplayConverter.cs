@@ -1,4 +1,5 @@
 using AcademiaDoZe.Application.Enums;
+using AcademiaDoZe.Presentation.AppMaui.Helpers;
 using System.Globalization;
 
 namespace AcademiaDoZe.Presentation.AppMaui.Converters;
@@ -12,17 +13,19 @@ public sealed class RestricoesFlagsDisplayConverter : IValueConverter
         if (value is not AppMatriculaRestricoes flags) return string.Empty;
 
         // Nenhuma
-        if (flags == AppMatriculaRestricoes.None) return AppMatriculaRestricoes.None.GetDisplayName();
+        if (flags == AppMatriculaRestricoes.None) return Nome(AppMatriculaRestricoes.None);
 
         // Junta todos os que estão marcados
         var partes = new List<string>();
         foreach (var v in Enum.GetValues<AppMatriculaRestricoes>().Cast<AppMatriculaRestricoes>())
         {
             if (v == AppMatriculaRestricoes.None) continue;
-            if (flags.HasFlag(v)) partes.Add(v.GetDisplayName());
+            if (flags.HasFlag(v)) partes.Add(Nome(v));
         }
-        return partes.Count > 0 ? string.Join(", ", partes) : AppMatriculaRestricoes.None.GetDisplayName();
+        return partes.Count > 0 ? string.Join(", ", partes) : Nome(AppMatriculaRestricoes.None);
     }
+
+    private static string Nome(AppMatriculaRestricoes v) => L.NomeEnum(v, v.GetDisplayName());
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotSupportedException();

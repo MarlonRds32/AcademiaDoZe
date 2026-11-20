@@ -7,10 +7,13 @@
              x:DataType="vm:MatriculaListViewModel"
              xmlns:dto="clr-namespace:AcademiaDoZe.Application.DTOs;assembly=AcademiaDoZe.Application"
              xmlns:converters="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Converters"
-             Title="{Binding Title}">
+             Title="{helpers:Translate strMatricula}"
+             xmlns:helpers="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Helpers">
 
     <!-- Recursos da Página -->
     <ContentPage.Resources>
+        <converters:DateOnlyShortToStringConverter x:Key="DateOnlyShort" />
+        <converters:FiltroDisplayConverter x:Key="FiltroDisplay" />
         <converters:FotoToImageSourceConverter x:Key="FotoToImageSourceConverter" />
         <converters:EnumDisplayConverter x:Key="EnumDisplay" />
         <converters:RestricoesFlagsDisplayConverter x:Key="RestricoesDisplay" />
@@ -25,8 +28,8 @@
                         <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="5"
                                 HeightRequest="110" WidthRequest="110"
                                 StrokeShape="RoundRectangle 12"
-                                Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
-                                StrokeThickness="1"
+                                Stroke="{StaticResource Lime}"
+                                StrokeThickness="3"
                                 BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}"
                                 Margin="0,0,10,0" VerticalOptions="Center">
                             <Image Source="{Binding AlunoMatricula.Foto, Converter={StaticResource FotoToImageSourceConverter}}"
@@ -42,8 +45,8 @@
                                 <FormattedString>
                                     <Span Text="CPF: "/>
                                     <Span Text="{Binding AlunoMatricula.Cpf}"/>
-                                    <Span Text="  •  Nasc.: "/>
-                                    <Span Text="{Binding AlunoMatricula.DataNascimento, StringFormat='{0:dd/MM/yyyy}'}"/>
+                                    <Span Text="{helpers:Translate strNascAbrev}"/>
+                                    <Span Text="{Binding AlunoMatricula.DataNascimento, Converter={StaticResource DateOnlyShort}}"/>
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
@@ -59,10 +62,10 @@
                         <Label Grid.Row="3" Grid.Column="0" Margin="0,0,0,2" FontSize="12">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="Vigência: " FontAttributes="Bold"/>
-                                    <Span Text="{Binding DataInicio, StringFormat='{0:dd/MM/yyyy}'}"/>
-                                    <Span Text=" até "/>
-                                    <Span Text="{Binding DataFim, StringFormat='{0:dd/MM/yyyy}'}"/>
+                                    <Span Text="{helpers:Translate strVigenciaLbl}" FontAttributes="Bold"/>
+                                    <Span Text="{Binding DataInicio, Converter={StaticResource DateOnlyShort}}"/>
+                                    <Span Text="{helpers:Translate strAte}"/>
+                                    <Span Text="{Binding DataFim, Converter={StaticResource DateOnlyShort}}"/>
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
@@ -71,7 +74,7 @@
                         <Label Grid.Row="4" Grid.Column="0" Margin="0,0,0,2" FontSize="12" LineBreakMode="TailTruncation">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="Objetivo: " FontAttributes="Bold"/>
+                                    <Span Text="{helpers:Translate strObjetivoLbl}" FontAttributes="Bold"/>
                                     <Span Text="{Binding Objetivo}"/>
                                 </FormattedString>
                             </Label.FormattedText>
@@ -81,19 +84,19 @@
                         <Label Grid.Row="5" Grid.Column="0" Margin="0,0,0,2" FontSize="12" LineBreakMode="TailTruncation">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="Restrições: " FontAttributes="Bold"/>
+                                    <Span Text="{helpers:Translate strRestricoesLbl}" FontAttributes="Bold"/>
                                     <Span Text="{Binding RestricoesMedicas, Converter={StaticResource RestricoesDisplay}}"/>
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
 
                         <!-- Observações -->
-                        <Label Grid.Row="6" Grid.Column="0" Text="{Binding ObservacoesRestricoes, StringFormat='Obs: {0}'}" FontSize="11" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" LineBreakMode="TailTruncation" Margin="0,0,0,2"/>
+                        <Label Grid.Row="6" Grid.Column="0" FontSize="11" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" LineBreakMode="TailTruncation" Margin="0,0,0,2"><Label.FormattedText><FormattedString><Span Text="{helpers:Translate strObs}"/><Span Text=": "/><Span Text="{Binding ObservacoesRestricoes}"/></FormattedString></Label.FormattedText></Label>
 
                         <!-- Botão de ações extras -->
                         <Button Grid.Row="0" Grid.Column="2" Text="" Style="{StaticResource ButtonSmall}" Margin="0,0" Clicked="OnMoreClicked">
                             <Button.ImageSource>
-                                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe5d4;" />
+                                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe5d4;" Color="{AppThemeBinding Light={StaticResource Lime}, Dark={StaticResource Ink}}" />
                             </Button.ImageSource>
                         </Button>
                     </Grid>
@@ -108,11 +111,11 @@
         <!-- Search Bar -->
         <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="15,10">
             <Grid ColumnDefinitions="Auto,10,*,10,Auto" VerticalOptions="Center">
-                <Picker Grid.Column="0" Title="" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="110" HorizontalOptions="Start" HeightRequest="40" VerticalOptions="Center"/>
-                <Entry Grid.Column="2" Text="{Binding SearchText}" Placeholder="Digite o valor..." HeightRequest="40" VerticalOptions="Center" ClearButtonVisibility="WhileEditing" ReturnCommand="{Binding SearchMatriculasCommand}"/>
+                <Picker Grid.Column="0" Title="" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="110" HorizontalOptions="Start" HeightRequest="40" VerticalOptions="Center"><Picker.ItemDisplayBinding><Binding Converter="{StaticResource FiltroDisplay}" /></Picker.ItemDisplayBinding></Picker>
+                <Entry Grid.Column="2" Text="{Binding SearchText}" Placeholder="{helpers:Translate strDigiteValor}" HeightRequest="40" VerticalOptions="Center" ClearButtonVisibility="WhileEditing" ReturnCommand="{Binding SearchMatriculasCommand}"/>
                 <Button Grid.Column="4" Text="" Style="{StaticResource ButtonPrimary}" FontSize="14" WidthRequest="80" HeightRequest="40" Command="{Binding SearchMatriculasCommand}">
                     <Button.ImageSource>
-                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" />
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" Color="{AppThemeBinding Light={StaticResource Lime}, Dark={StaticResource Ink}}" />
                     </Button.ImageSource>
                 </Button>
             </Grid>
@@ -143,8 +146,8 @@
 
                     <CollectionView.EmptyView>
                         <StackLayout VerticalOptions="Center">
-                            <Label Text="Nenhuma matrícula encontrada" HorizontalOptions="Center" Style="{StaticResource SubHeadline}"/>
-                            <Button Text="Adicionar Primeira Matrícula" Command="{Binding AddMatriculaCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="50" Margin="0,20,0,0"/>
+                            <Label Text="{helpers:Translate strNenhumaMatricula}" HorizontalOptions="Center" Style="{StaticResource SubHeadline}"/>
+                            <Button Text="{helpers:Translate strAdicionarPrimeiraMatricula}" Command="{Binding AddMatriculaCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="50" Margin="0,20,0,0"/>
                         </StackLayout>
                     </CollectionView.EmptyView>
 
@@ -160,7 +163,7 @@
                     <Shadow Brush="{AppThemeBinding Light=Black, Dark=Gray}" Offset="0,4" Radius="8" Opacity="0.3"/>
                 </Button.Shadow>
                 <Button.ImageSource>
-                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe145;" />
+                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe145;" Color="{AppThemeBinding Light={StaticResource Lime}, Dark={StaticResource Ink}}" />
                 </Button.ImageSource>
             </Button>
         </Grid>

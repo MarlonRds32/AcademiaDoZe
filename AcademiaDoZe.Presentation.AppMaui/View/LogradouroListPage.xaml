@@ -5,17 +5,22 @@ x:Class="AcademiaDoZe.Presentation.AppMaui.Views.LogradouroListPage"
 xmlns:vm="clr-namespace:AcademiaDoZe.Presentation.AppMaui.ViewModels"
 x:DataType="vm:LogradouroListViewModel"
 xmlns:dto="clr-namespace:AcademiaDoZe.Application.DTOs;assembly=AcademiaDoZe.Application"
-Title="{Binding Title}">
+Title="{helpers:Translate strLogradouro}"
+             xmlns:helpers="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Helpers"
+             xmlns:converters="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Converters">
+    <ContentPage.Resources>
+        <converters:FiltroDisplayConverter x:Key="FiltroDisplay" />
+    </ContentPage.Resources>
     <Grid RowDefinitions="Auto,*">
         <!-- Search Bar com Picker de filtro -->
         <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="15,10">
             <Grid ColumnDefinitions="Auto,10,*,10,Auto" VerticalOptions="Center">
                 <!-- Picker de filtro -->
-                <Picker Grid.Column="0" Title="" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="110" HorizontalOptions="Start" HeightRequest="40" VerticalOptions="Center"/>
+                <Picker Grid.Column="0" Title="" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="110" HorizontalOptions="Start" HeightRequest="40" VerticalOptions="Center"><Picker.ItemDisplayBinding><Binding Converter="{StaticResource FiltroDisplay}" /></Picker.ItemDisplayBinding></Picker>
                 <!-- Entry de busca -->
-                <Entry Grid.Column="2" Text="{Binding SearchText}" Placeholder="Digite o valor..." HeightRequest="40" VerticalOptions="Center" Margin="0,0,0,0"/>
+                <Entry Grid.Column="2" Text="{Binding SearchText}" Placeholder="{helpers:Translate strDigiteValor}" HeightRequest="40" VerticalOptions="Center" Margin="0,0,0,0"/>
                 <!-- Botão de busca -->
-                <Button Grid.Column="4" Text="Buscar" Style="{StaticResource ButtonPrimary}" FontSize="14" WidthRequest="80" HeightRequest="40" Margin="0,0,0,0" Command="{Binding SearchLogradourosCommand}"/>
+                <Button Grid.Column="4" Text="{helpers:Translate strBuscar}" Style="{StaticResource ButtonPrimary}" FontSize="14" WidthRequest="80" HeightRequest="40" Margin="0,0,0,0" Command="{Binding SearchLogradourosCommand}"/>
             </Grid>
         </Border>
         <!-- Lista de Logradouros com FAB - "Floating Action Button" - Botão de Ação Flutuante -->
@@ -25,8 +30,8 @@ Title="{Binding Title}">
                 <CollectionView ItemsSource="{Binding Logradouros}" SelectionMode="None">
                     <CollectionView.EmptyView>
                         <StackLayout VerticalOptions="Center">
-                            <Label Text="Nenhum logradouro encontrado" HorizontalOptions="Center" Style="{StaticResource SubHeadline}"/>
-                            <Button Text="Adicionar Primeiro Logradouro" Command="{Binding AddLogradouroCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="50" Margin="0,20,0,0"/>
+                            <Label Text="{helpers:Translate strNenhumLogradouro}" HorizontalOptions="Center" Style="{StaticResource SubHeadline}"/>
+                            <Button Text="{helpers:Translate strAdicionarPrimeiroLogradouro}" Command="{Binding AddLogradouroCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="50" Margin="0,20,0,0"/>
                         </StackLayout>
                     </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
@@ -51,8 +56,8 @@ Title="{Binding Title}">
 
                                         <!-- Botões de Ação -->
 
-                                        <Button Grid.Row="0" Grid.Column="1" Text="Editar" Style="{StaticResource ButtonSmall}" Margin="4,0" Clicked="OnEditButtonClicked" />
-                                        <Button Grid.Row="0" Grid.Column="2" Text="Excluir" Style="{StaticResource ButtonDanger}" Margin="4,0" Clicked="OnDeleteButtonClicked" />
+                                        <Button Grid.Row="0" Grid.Column="1" Text="{helpers:Translate strEditar}" Style="{StaticResource ButtonSmall}" Margin="4,0" Clicked="OnEditButtonClicked" />
+                                        <Button Grid.Row="0" Grid.Column="2" Text="{helpers:Translate strExcluir}" Style="{StaticResource ButtonDanger}" Margin="4,0" Clicked="OnDeleteButtonClicked" />
                                     </Grid>
                                 </Border>
                             </Grid>

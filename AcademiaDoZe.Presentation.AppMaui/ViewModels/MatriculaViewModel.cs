@@ -1,3 +1,4 @@
+using AcademiaDoZe.Presentation.AppMaui.Helpers;
 using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Application.Enums;
 using AcademiaDoZe.Application.Interfaces;
@@ -94,13 +95,13 @@ public partial class MatriculaViewModel : BaseViewModel
         if (MatriculaId > 0)
         {
             IsEditMode = true;
-            Title = "Editar Matrícula";
+            Title = L.T("strEditarMatricula");
             await LoadMatriculaAsync();
         }
         else
         {
             IsEditMode = false;
-            Title = "Nova Matrícula";
+            Title = L.T("strNovaMatricula");
             SyncSelectionFromFlags();
         }
         NotificarPropriedadesVisuais();
@@ -110,7 +111,7 @@ public partial class MatriculaViewModel : BaseViewModel
     {
         _matriculaService = matriculaService;
         _alunoService = alunoService;
-        Title = "Detalhes da Matrícula";
+        Title = L.T("strDetalhesMatricula");
 
         BuildRestricoesMulti();
     }
@@ -207,7 +208,7 @@ public partial class MatriculaViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao carregar matrícula: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroCarregarMatricula", ex.Message), "OK");
         }
         finally
         {
@@ -252,7 +253,7 @@ public partial class MatriculaViewModel : BaseViewModel
 
             if (alunoData == null)
             {
-                await Shell.Current.DisplayAlertAsync("Erro", "O Aluno informado não foi encontrado. Busque um aluno válido pelo CPF.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.T("msgAlunoInformadoNaoEncontrado"), "OK");
                 return;
             }
             Matricula.AlunoMatricula = alunoData;
@@ -264,19 +265,19 @@ public partial class MatriculaViewModel : BaseViewModel
             if (IsEditMode)
             {
                 await _matriculaService.AtualizarAsync(Matricula, cts.Token);
-                await Shell.Current.DisplayAlertAsync("Sucesso", "Matrícula atualizada com sucesso!", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strSucesso"), L.T("msgMatriculaAtualizada"), "OK");
             }
             else
             {
                 await _matriculaService.AdicionarAsync(Matricula, cts.Token);
-                await Shell.Current.DisplayAlertAsync("Sucesso", "Matrícula criada com sucesso!", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strSucesso"), L.T("msgMatriculaCriada"), "OK");
             }
 
             await Shell.Current.GoToAsync("..");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao salvar matrícula: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroSalvarMatricula", ex.Message), "OK");
         }
         finally
         {
@@ -289,7 +290,7 @@ public partial class MatriculaViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(Matricula.AlunoMatricula?.Cpf))
         {
-            await Shell.Current.DisplayAlertAsync("Aviso", "Informe o CPF para realizar a busca.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("strInformeCpfBusca"), "OK");
             return;
         }
 
@@ -306,16 +307,16 @@ public partial class MatriculaViewModel : BaseViewModel
                 Matricula.AlunoMatricula = alunoData;
                 OnPropertyChanged(nameof(Matricula));
                 NotificarPropriedadesVisuais();
-                await Shell.Current.DisplayAlertAsync("Aviso", "Aluno encontrado! Dados preenchidos automaticamente.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgAlunoEncontrado"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Aviso", "Aluno não encontrado.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgAlunoNaoEncontrado"), "OK");
             }
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao buscar CPF: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroBuscarCpf", ex.Message), "OK");
         }
         finally
         {
@@ -328,8 +329,8 @@ public partial class MatriculaViewModel : BaseViewModel
     {
         try
         {
-            string escolha = await Shell.Current.DisplayActionSheetAsync("Origem do Laudo Médico", "Cancelar", null, "Galeria", "Câmera", "Remover Laudo");
-            if (escolha == "Remover Laudo")
+            string escolha = await Shell.Current.DisplayActionSheetAsync(L.T("strOrigemLaudo"), L.T("strCancelar"), null, L.T("strGaleria"), L.T("strCamera"), L.T("strRemoverLaudo"));
+            if (escolha == L.T("strRemoverLaudo"))
             {
                 Matricula.LaudoMedico = null;
                 OnPropertyChanged(nameof(Matricula));
@@ -338,15 +339,15 @@ public partial class MatriculaViewModel : BaseViewModel
             }
 
             FileResult? result = null;
-            if (escolha == "Galeria")
+            if (escolha == L.T("strGaleria"))
             {
                 result = await FilePicker.Default.PickAsync(new PickOptions
                 {
-                    PickerTitle = "Selecione o Laudo Médico",
+                    PickerTitle = L.T("strSelecioneLaudo"),
                     FileTypes = FilePickerFileType.Images
                 });
             }
-            else if (escolha == "Câmera")
+            else if (escolha == L.T("strCamera"))
             {
                 if (MediaPicker.Default.IsCaptureSupported)
                 {
@@ -354,7 +355,7 @@ public partial class MatriculaViewModel : BaseViewModel
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlertAsync("Erro", "Captura de foto não suportada neste dispositivo.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.T("msgCapturaNaoSuportada"), "OK");
                     return;
                 }
             }
@@ -371,7 +372,7 @@ public partial class MatriculaViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao selecionar imagem: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroSelecionarImagem", ex.Message), "OK");
         }
     }
 
@@ -386,25 +387,25 @@ public partial class MatriculaViewModel : BaseViewModel
         // Aluno
         if (matricula.AlunoMatricula == null || (matricula.AlunoMatricula.Id <= 0 && string.IsNullOrWhiteSpace(matricula.AlunoMatricula.Cpf)))
         {
-            errors.Add("• Aluno é obrigatório. Informe o CPF e realize a busca.");
+            errors.Add(L.T("valMatAluno"));
         }
 
         // Data de Início
         if (matricula.DataInicio == default)
         {
-            errors.Add("• Data de início é obrigatória.");
+            errors.Add(L.T("valMatInicio"));
         }
 
         // Objetivo
         if (string.IsNullOrWhiteSpace(matricula.Objetivo))
         {
-            errors.Add("• Objetivo da matrícula é obrigatório.");
+            errors.Add(L.T("valMatObjetivo"));
         }
 
         // Plano
         if (!Enum.IsDefined(matricula.Plano))
         {
-            errors.Add("• Plano da matrícula é inválido.");
+            errors.Add(L.T("valMatPlano"));
         }
 
         // Laudo Médico para menor de 16 anos
@@ -416,19 +417,19 @@ public partial class MatriculaViewModel : BaseViewModel
 
         if (menor16 && !possuiLaudo)
         {
-            errors.Add("• Alunos menores de 16 anos devem obrigatoriamente apresentar laudo médico.");
+            errors.Add(L.T("valMatMenor16"));
         }
 
         // Laudo Médico para restrições médicas
         if (matricula.RestricoesMedicas != AppMatriculaRestricoes.None && !possuiLaudo)
         {
-            errors.Add("• Alunos com restrições médicas cadastradas devem obrigatoriamente apresentar laudo médico.");
+            errors.Add(L.T("valMatRestricoes"));
         }
 
         if (errors.Count > 0)
         {
-            var mensagem = "Por favor, corrija os seguintes campos:\n\n" + string.Join("\n", errors);
-            await Shell.Current.DisplayAlertAsync("Erros de Validação", mensagem, "OK");
+            var mensagem = L.T("msgCorrijaCampos") + "\n\n" + string.Join("\n", errors);
+            await Shell.Current.DisplayAlertAsync(L.T("strErrosValidacao"), mensagem, "OK");
             return false;
         }
 

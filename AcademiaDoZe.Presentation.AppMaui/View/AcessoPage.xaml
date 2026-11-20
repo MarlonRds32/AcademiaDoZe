@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AcademiaDoZe.Presentation.AppMaui.Views.AcessoPage"
+             xmlns:vm="clr-namespace:AcademiaDoZe.Presentation.AppMaui.ViewModels"
+             xmlns:converters="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Converters"
+             xmlns:helpers="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Helpers"
+             x:DataType="vm:AcessoViewModel"
+             Title="{helpers:Translate strControleAcesso}">
+
+    <ContentPage.Resources>
+        <converters:FotoToImageSourceConverter x:Key="FotoToImageSourceConverter" />
+
+        <!-- Uma linha da lista de registros do dia -->
+        <DataTemplate x:Key="AcessoItemTemplate" x:DataType="vm:AcessoItem">
+            <Border Style="{StaticResource CardBorder}" Margin="15,4" Padding="12">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                    <Border Grid.Column="0" HeightRequest="44" WidthRequest="44" StrokeShape="RoundRectangle 22" Stroke="{StaticResource Lime}" StrokeThickness="2" BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}">
+                        <Image Source="{Binding Foto, Converter={StaticResource FotoToImageSourceConverter}}" Aspect="AspectFill" HeightRequest="44" WidthRequest="44"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="{Binding Nome}" FontAttributes="Bold" LineBreakMode="TailTruncation"/>
+                        <Label FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding PessoaTexto}"/>
+                                    <Span Text="  •  "/>
+                                    <Span Text="{Binding Hora}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Text="{Binding Detalhe}" FontSize="12" IsVisible="{Binding HasDetalhe}" LineBreakMode="WordWrap"/>
+                    </VerticalStackLayout>
+                    <!-- Entrada: verde-limão / Saída: contorno -->
+                    <Border Grid.Column="2" Style="{StaticResource BadgeEntrada}" IsVisible="{Binding IsEntrada}" VerticalOptions="Center">
+                        <Label Text="{Binding TipoTexto}" FontSize="11" FontAttributes="Bold" TextColor="{StaticResource Ink}"/>
+                    </Border>
+                    <Border Grid.Column="2" Style="{StaticResource BadgeSaida}" IsVisible="{Binding IsSaida}" VerticalOptions="Center">
+                        <Label Text="{Binding TipoTexto}" FontSize="11" FontAttributes="Bold"/>
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="14" Padding="0,10,0,24">
+
+            <!-- Registro por CPF -->
+            <Border Style="{StaticResource CardBorder}" Margin="15,0">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="{helpers:Translate strControleAcesso}" Style="{StaticResource SubHeadline}"/>
+                    <Label Text="{helpers:Translate strAcessoSubtitulo}" HorizontalTextAlignment="Center" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"/>
+
+                    <!-- Aluno ou Colaborador -->
+                    <Label Text="{helpers:Translate strQuemEstaPassando}"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <!-- opção selecionada aparece preenchida; a outra, em contorno -->
+                        <Button Grid.Column="0" Text="{helpers:Translate strPessoaAluno}" Command="{Binding SelecionarAlunoCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="44" IsVisible="{Binding IsAluno}"/>
+                        <Button Grid.Column="0" Text="{helpers:Translate strPessoaAluno}" Command="{Binding SelecionarAlunoCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="44" IsVisible="{Binding IsColaborador}"/>
+                        <Button Grid.Column="1" Text="{helpers:Translate strPessoaColaborador}" Command="{Binding SelecionarColaboradorCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="44" IsVisible="{Binding IsColaborador}"/>
+                        <Button Grid.Column="1" Text="{helpers:Translate strPessoaColaborador}" Command="{Binding SelecionarColaboradorCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="44" IsVisible="{Binding IsAluno}"/>
+                    </Grid>
+
+                    <!-- CPF -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="{helpers:Translate strCpf}"/>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <Entry Grid.Column="0" Text="{Binding Cpf}" Placeholder="000.000.000-00" Keyboard="Numeric" MaxLength="14" ClearButtonVisibility="WhileEditing" ReturnCommand="{Binding RegistrarCommand}"/>
+                            <Button Grid.Column="1" Text="{helpers:Translate strRegistrar}" Command="{Binding RegistrarCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="44" Padding="18,0"/>
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Acesso negado: regra de negócio -->
+            <Border Margin="15,0" Padding="14" StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#DC2626" BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#3B0D0D}" IsVisible="{Binding HasErro}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center">
+                    <Label Grid.Column="0" Text="&#xe000;" FontFamily="MaterialIcons" FontSize="26" TextColor="#DC2626" VerticalOptions="Center"/>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="{helpers:Translate strAcessoNegado}" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#991B1B, Dark=#FCA5A5}"/>
+                        <Label Text="{Binding MensagemErro}" TextColor="{AppThemeBinding Light=#991B1B, Dark=#FCA5A5}" LineBreakMode="WordWrap"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Último registro -->
+            <Border Margin="15,0" Padding="16" StrokeShape="RoundRectangle 12" StrokeThickness="2" Stroke="{StaticResource Lime}" BackgroundColor="{StaticResource Ink}" IsVisible="{Binding HasResultado}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="{helpers:Translate strEntradaRegistrada}" FontAttributes="Bold" FontSize="18" HorizontalTextAlignment="Center" TextColor="{StaticResource Lime}" IsVisible="{Binding Resultado.IsEntrada}"/>
+                    <Label Text="{helpers:Translate strSaidaRegistrada}" FontAttributes="Bold" FontSize="18" HorizontalTextAlignment="Center" TextColor="{StaticResource Paper}" IsVisible="{Binding Resultado.IsSaida}"/>
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14" VerticalOptions="Center">
+                        <Border Grid.Column="0" HeightRequest="84" WidthRequest="84" StrokeShape="RoundRectangle 42" Stroke="{StaticResource Lime}" StrokeThickness="2" BackgroundColor="{StaticResource Gray800}">
+                            <Image Source="{Binding Resultado.Foto, Converter={StaticResource FotoToImageSourceConverter}}" Aspect="AspectFill" HeightRequest="84" WidthRequest="84"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                            <Label Text="{Binding Resultado.Nome}" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Paper}" LineBreakMode="WordWrap"/>
+                            <Label FontSize="12" TextColor="{StaticResource Gray300}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Resultado.PessoaTexto}"/>
+                                        <Span Text="  •  CPF: "/>
+                                        <Span Text="{Binding Resultado.Cpf}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Text="{Binding Resultado.DataHoraTexto}" FontSize="12" TextColor="{StaticResource Gray300}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Label Text="{Binding Resultado.Detalhe}" FontSize="15" TextColor="{StaticResource Lime}" HorizontalTextAlignment="Center" LineBreakMode="WordWrap"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Registros de hoje -->
+            <Label Text="{helpers:Translate strRegistrosHoje}" FontAttributes="Bold" FontSize="16" Margin="18,8,18,0"/>
+            <Label Text="{helpers:Translate strNenhumRegistroHoje}" Margin="18,0" IsVisible="{Binding HasNoRegistros}" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"/>
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Registros}" BindableLayout.ItemTemplate="{StaticResource AcessoItemTemplate}" Spacing="0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

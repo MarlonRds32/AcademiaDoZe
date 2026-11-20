@@ -1,3 +1,4 @@
+using AcademiaDoZe.Presentation.AppMaui.Helpers;
 using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Presentation.AppMaui.ViewModels;
 
@@ -32,7 +33,7 @@ public partial class AlunoListPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Erro", $"Erro ao editar aluno: {ex.Message}", "OK");
+            await DisplayAlertAsync(L.T("strErro"), L.F("msgErroEditarAluno", ex.Message), "OK");
         }
     }
 
@@ -47,7 +48,7 @@ public partial class AlunoListPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Erro", $"Erro ao excluir aluno: {ex.Message}", "OK");
+            await DisplayAlertAsync(L.T("strErro"), L.F("msgErroExcluirAluno", ex.Message), "OK");
         }
     }
 }

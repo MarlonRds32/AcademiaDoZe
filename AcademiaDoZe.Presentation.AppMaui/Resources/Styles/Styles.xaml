@@ -2,42 +2,72 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
+    <!-- Identidade visual: Ink #101010, Paper #FFFFFF e Lime #C8FF00.
+         Claro: fundo Paper, botões Ink com texto Lime. Escuro: fundo Ink, botões Lime com texto Ink. -->
+
+    <!-- Barra superior e menu lateral -->
+    <Style TargetType="Shell" ApplyToDerivedTypes="True">
+        <Setter Property="Shell.BackgroundColor" Value="{StaticResource Ink}" />
+        <Setter Property="Shell.ForegroundColor" Value="{StaticResource Lime}" />
+        <Setter Property="Shell.TitleColor" Value="{StaticResource Paper}" />
+        <Setter Property="Shell.NavBarHasShadow" Value="False" />
+        <Setter Property="Shell.FlyoutBackgroundColor" Value="{AppThemeBinding Light={StaticResource Paper}, Dark={StaticResource Ink}}" />
+    </Style>
+
     <!-- Estilos Implícitos (Aplica a TODOS os controlos da aplicação sem precisar de x:Key) -->
 
-    <!-- Cor de fundo padrão de todas as páginas (Gray100 para dar destaque ao Card que é Branco) -->
+    <!-- Cor de fundo padrão de todas as páginas -->
     <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray950}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Paper}, Dark={StaticResource Ink}}" />
     </Style>
 
     <!-- Cor de texto padrão para todos os Labels sem estilo específico -->
     <Style TargetType="Label">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}" />
     </Style>
 
     <!-- Cor de texto e caixa de fundo para caixas de texto Entry -->
     <Style TargetType="Entry">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Paper}, Dark={StaticResource Gray800}}" />
     </Style>
 
     <!-- Cor de texto e caixa de fundo para Pickers (menus de seleção) -->
     <Style TargetType="Picker">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}" />
         <Setter Property="TitleColor" Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Paper}, Dark={StaticResource Gray800}}" />
     </Style>
 
-    <!-- Estilos de título (vinham no template) -->
+    <Style TargetType="DatePicker">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Paper}, Dark={StaticResource Gray800}}" />
+    </Style>
+
+    <Style TargetType="CheckBox">
+        <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Lime}}" />
+    </Style>
+
+    <Style TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Lime}}" />
+    </Style>
+
+    <Style TargetType="RefreshView">
+        <Setter Property="RefreshColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Lime}}" />
+    </Style>
+
+    <!-- Estilos de título -->
     <Style TargetType="Label" x:Key="Headline">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light=Black, Dark=White}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Lime}}" />
         <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
     <Style TargetType="Label" x:Key="SubHeadline">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light=Black, Dark=White}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}" />
         <Setter Property="FontSize" Value="24" />
         <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
@@ -46,45 +76,77 @@
     <!-- Estilos nomeados para Border (Card) -->
     <Style TargetType="Border" x:Key="CardBorder">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource OffWhite}, Dark={StaticResource Gray900}}"/>
-        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"/>
-        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource Lime}"/>
+        <Setter Property="StrokeThickness" Value="2"/>
         <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
         <Setter Property="Padding" Value="15"/>
     </Style>
 
+    <!-- Moldura verde-limão para fotos e logo -->
+    <Style TargetType="Border" x:Key="PhotoFrame">
+        <Setter Property="Stroke" Value="{StaticResource Lime}"/>
+        <Setter Property="StrokeThickness" Value="3"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 14"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Ink}"/>
+    </Style>
+
+    <!-- Etiquetas de Entrada / Saída -->
+    <Style TargetType="Border" x:Key="BadgeEntrada">
+        <Setter Property="BackgroundColor" Value="{StaticResource Lime}"/>
+        <Setter Property="Stroke" Value="{StaticResource Ink}"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 8"/>
+        <Setter Property="Padding" Value="10,4"/>
+    </Style>
+    <Style TargetType="Border" x:Key="BadgeSaida">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 8"/>
+        <Setter Property="Padding" Value="10,4"/>
+    </Style>
+
     <!-- Estilos nomeados para Button -->
     <Style TargetType="Button" x:Key="ButtonPrimary">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"/>
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Lime}}"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Lime}, Dark={StaticResource Ink}}"/>
+        <Setter Property="BorderWidth" Value="0"/>
         <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="CornerRadius" Value="25"/>
         <Setter Property="HeightRequest" Value="50"/>
     </Style>
 
     <Style TargetType="Button" x:Key="ButtonSecondary">
         <Setter Property="BackgroundColor" Value="Transparent"/>
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray800}, Dark={StaticResource Gray200}}"/>
-        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray600}}"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Gray400}}"/>
         <Setter Property="BorderWidth" Value="1"/>
         <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="None"/>
         <Setter Property="CornerRadius" Value="25"/>
         <Setter Property="HeightRequest" Value="50"/>
     </Style>
 
     <Style TargetType="Button" x:Key="ButtonSmall">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Lime}}"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Lime}, Dark={StaticResource Ink}}"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="CornerRadius" Value="16"/>
         <Setter Property="HeightRequest" Value="32"/>
         <Setter Property="WidthRequest" Value="60"/>
     </Style>
 
+    <!-- Ação destrutiva: contorno, para não competir com a ação principal -->
     <Style TargetType="Button" x:Key="ButtonDanger">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Magenta}, Dark={StaticResource Magenta}}"/>
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Paper}, Dark={StaticResource Ink}}"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
+        <Setter Property="BorderWidth" Value="1"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="CornerRadius" Value="16"/>
         <Setter Property="HeightRequest" Value="32"/>
         <Setter Property="WidthRequest" Value="60"/>
     </Style>
-
 </ResourceDictionary>

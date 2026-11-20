@@ -1,3 +1,4 @@
+using AcademiaDoZe.Presentation.AppMaui.Helpers;
 using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Presentation.AppMaui.ViewModels;
 
@@ -32,7 +33,7 @@ public partial class MatriculaListPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Erro", $"Erro ao editar matrícula: {ex.Message}", "OK");
+            await DisplayAlertAsync(L.T("strErro"), L.F("msgErroEditarMatricula", ex.Message), "OK");
         }
     }
 
@@ -47,7 +48,7 @@ public partial class MatriculaListPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Erro", $"Erro ao excluir matrícula: {ex.Message}", "OK");
+            await DisplayAlertAsync(L.T("strErro"), L.F("msgErroExcluirMatricula", ex.Message), "OK");
         }
     }
 
@@ -58,17 +59,14 @@ public partial class MatriculaListPage : ContentPage
             BindingContext is not MatriculaListViewModel vm)
             return;
 
-        var choice = await DisplayActionSheetAsync("Ações", "Cancelar", null, "Editar", "Excluir");
-        switch (choice)
+        var choice = await DisplayActionSheetAsync(L.T("strAcoes"), L.T("strCancelar"), null, L.T("strEditar"), L.T("strExcluir"));
+        if (choice == L.T("strEditar"))
         {
-            case "Editar":
-                await vm.EditMatriculaCommand.ExecuteAsync(dto);
-                break;
-            case "Excluir":
-                await vm.DeleteMatriculaCommand.ExecuteAsync(dto);
-                break;
-            default:
-                break;
+            await vm.EditMatriculaCommand.ExecuteAsync(dto);
+        }
+        else if (choice == L.T("strExcluir"))
+        {
+            await vm.DeleteMatriculaCommand.ExecuteAsync(dto);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AcademiaDoZe.Application.DTOs;
+﻿using AcademiaDoZe.Presentation.AppMaui.Helpers;
+using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Application.Interfaces;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -26,7 +27,7 @@ public partial class LogradouroListViewModel : BaseViewModel
     public LogradouroListViewModel(ILogradouroService logradouroService)
     {
         _logradouroService = logradouroService;
-        Title = "Logradouros";
+        Title = L.T("strLogradouro");
     }
 
     [RelayCommand]
@@ -38,7 +39,7 @@ public partial class LogradouroListViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao navegar para tela de cadastro: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroNavegarCadastro", ex.Message), "OK");
         }
     }
 
@@ -54,7 +55,7 @@ public partial class LogradouroListViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao navegar para tela de edição: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroNavegarEdicao", ex.Message), "OK");
         }
     }
 
@@ -99,11 +100,11 @@ public partial class LogradouroListViewModel : BaseViewModel
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "O carregamento dos logradouros expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgCargaLogradourosExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao carregar logradouros: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroCarregarLogradouros", ex.Message), "OK");
         }
         finally
         {
@@ -143,7 +144,7 @@ public partial class LogradouroListViewModel : BaseViewModel
             {
                 if (!int.TryParse(SearchText.Trim(), out int id) || id <= 0)
                 {
-                    await Shell.Current.DisplayAlertAsync("Validação", "Para buscar por ID, informe um número inteiro positivo válido.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgBuscaIdInteiro"), "OK");
                     return;
                 }
 
@@ -156,7 +157,7 @@ public partial class LogradouroListViewModel : BaseViewModel
                 var cepLimpo = new string([.. SearchText.Where(char.IsDigit)]);
                 if (cepLimpo.Length != 8)
                 {
-                    await Shell.Current.DisplayAlertAsync("Validação", "Para buscar por CEP, informe os 8 dígitos numéricos.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgBuscaCep8"), "OK");
                     return;
                 }
 
@@ -176,11 +177,11 @@ public partial class LogradouroListViewModel : BaseViewModel
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A busca expirou. Verifique a conexão com o banco.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgBuscaExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao buscar logradouros: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroBuscarLogradouros", ex.Message), "OK");
         }
         finally
         {
@@ -195,9 +196,9 @@ public partial class LogradouroListViewModel : BaseViewModel
             return;
 
         bool confirm = await Shell.Current.DisplayAlertAsync(
-            "Confirmar Exclusão",
-            $"Deseja realmente excluir o logradouro {logradouro.Nome}?",
-            "Sim", "Não");
+            L.T("strConfirmarExclusao"),
+            L.F("msgConfirmaExcluirLogradouro", logradouro.Nome),
+            L.T("strSim"), L.T("strNao"));
 
         if (!confirm)
             return;
@@ -211,16 +212,16 @@ public partial class LogradouroListViewModel : BaseViewModel
             if (success)
             {
                 Logradouros.Remove(logradouro);
-                await Shell.Current.DisplayAlertAsync("Sucesso", "Logradouro excluído com sucesso!", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strSucesso"), L.T("msgLogradouroExcluido"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Erro", "Não foi possível excluir o logradouro.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.T("msgLogradouroNaoExcluido"), "OK");
             }
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A exclusão do logradouro expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgExclusaoLogradouroExpirou"), "OK");
         }
         catch (Exception ex)
         {
@@ -228,12 +229,12 @@ public partial class LogradouroListViewModel : BaseViewModel
                 ex.Message.Contains("constraint", StringComparison.OrdinalIgnoreCase) ||
                 ex.Message.Contains("REFERENCE", StringComparison.OrdinalIgnoreCase))
             {
-                await Shell.Current.DisplayAlertAsync("Não Permitido",
-                    "Este logradouro não pode ser excluído pois está vinculado a alunos ou colaboradores cadastrados.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strNaoPermitido"),
+                    L.T("msgLogradouroVinculado"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao excluir logradouro: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroExcluirLogradouro", ex.Message), "OK");
             }
         }
         finally

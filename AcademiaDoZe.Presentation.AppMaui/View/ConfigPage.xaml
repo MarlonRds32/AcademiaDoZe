@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 x:Class="AcademiaDoZe.Presentation.AppMaui.Views.ConfigPage"
-Title="Configurações">
+Title="{helpers:Translate strConfiguracao}"
+             xmlns:helpers="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Helpers">
     <ScrollView>
         <StackLayout Spacing="20">
             <!-- Tema -->
@@ -10,9 +11,9 @@ Title="Configurações">
             <Border Style="{StaticResource CardBorder}" Margin="15,10">
 
                 <StackLayout Spacing="15">
-                    <Label Text="Tema" Style="{StaticResource SubHeadline}"/>
+                    <Label Text="{helpers:Translate strTema}" Style="{StaticResource SubHeadline}"/>
                     <StackLayout Spacing="5">
-                        <Label Text="Tema" />
+                        <Label Text="{helpers:Translate strTema}" />
                         <Picker x:Name="TemaPicker">
                             <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
@@ -24,18 +25,36 @@ Title="Configurações">
                         </Picker>
                     </StackLayout>
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                        <Button Grid.Column="0" Text="Cancelar" Clicked="OnCancelarClicked" Style="{StaticResource ButtonSecondary}" HeightRequest="45"/>
-                        <Button Grid.Column="1" Text="Salvar Tema" Clicked="OnSalvarTemaClicked" Style="{StaticResource ButtonPrimary}" HeightRequest="45"/>
+                        <Button Grid.Column="0" Text="{helpers:Translate strCancelar}" Clicked="OnCancelarClicked" Style="{StaticResource ButtonSecondary}" HeightRequest="45"/>
+                        <Button Grid.Column="1" Text="{helpers:Translate strSalvarTema}" Clicked="OnSalvarTemaClicked" Style="{StaticResource ButtonPrimary}" HeightRequest="45"/>
                     </Grid>
+                </StackLayout>
+            </Border>
+            <!-- Cultura -->
+            <Border Style="{StaticResource CardBorder}" Margin="15,10">
+                <StackLayout Spacing="15">
+                    <Label Text="{helpers:Translate strCultura}" Style="{StaticResource SubHeadline}"/>
+                    <StackLayout Spacing="5">
+                        <Label Text="{helpers:Translate strCultura}" />
+                        <Picker x:Name="CulturaPicker" SelectedIndexChanged="OnCulturaSelectedIndexChanged">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>en-US</x:String>
+                                    <x:String>es-ES</x:String>
+                                    <x:String>pt-BR</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </StackLayout>
                 </StackLayout>
             </Border>
             <!-- Credenciais do Banco -->
             <Border Style="{StaticResource CardBorder}" Margin="15,10">
                 <StackLayout Spacing="15">
-                    <Label Text="Credenciais do Banco" Style="{StaticResource SubHeadline}"/>
+                    <Label Text="{helpers:Translate strCredenciaisBanco}" Style="{StaticResource SubHeadline}"/>
                     <Grid ColumnDefinitions="*" ColumnSpacing="10">
                         <StackLayout Spacing="5" Grid.Column="0">
-                            <Label Text="Tipo de Gerenciador"/>
+                            <Label Text="{helpers:Translate strTipoGerenciador}"/>
                             <Picker x:Name="DatabaseTypePicker" SelectedIndexChanged="OnDatabaseTypeChanged"/>
                         </StackLayout>
                     </Grid>
@@ -43,7 +62,7 @@ Title="Configurações">
 
                     <Border x:Name="SqliteInfoCard" IsVisible="False" BackgroundColor="{AppThemeBinding Light=#F0F7FF, Dark=#1A2633}" StrokeShape="RoundRectangle 8" Padding="12">
 
-                        <Label Text=" O SQLite é um banco de dados local armazenado em arquivo. Não requer servidor de rede, usuário ou senha."
+                        <Label Text="{helpers:Translate strSqliteInfo}"
 FontSize="13"
 
 TextColor="{AppThemeBinding Light=#0056B3, Dark=#66B2FF}"/>
@@ -52,21 +71,21 @@ TextColor="{AppThemeBinding Light=#0056B3, Dark=#66B2FF}"/>
                     <!-- Campo específico para SQLite (Caminho do arquivo .db) -->
                     <StackLayout x:Name="SqliteContainer" Spacing="5" IsVisible="False">
 
-                        <Label Text="Caminho / Arquivo do Banco (.db)"/>
+                        <Label Text="{helpers:Translate strCaminhoBanco}"/>
                         <Entry x:Name="SqliteCaminhoEntry" Placeholder="Ex: C:\DEV\AcademiaDoZe\db_academia_do_ze.db"/>
                     </StackLayout>
                     <!-- Configurações de Servidor e Banco (SQL Server e MySQL) -->
                     <Grid x:Name="ServidorBancoGrid" ColumnDefinitions="*,*" ColumnSpacing="10">
 
                         <StackLayout Spacing="5" Grid.Column="0">
-                            <Label Text="Servidor"/>
-                            <Entry x:Name="ServidorEntry" Placeholder="Digite o servidor..."/>
+                            <Label Text="{helpers:Translate strServidor}"/>
+                            <Entry x:Name="ServidorEntry" Placeholder="{helpers:Translate strDigiteServidor}"/>
                         </StackLayout>
 
                         <StackLayout Spacing="5" Grid.Column="1">
 
-                            <Label Text="Banco"/>
-                            <Entry x:Name="BancoEntry" Placeholder="Digite o nome do banco..."/>
+                            <Label Text="{helpers:Translate strBanco}"/>
+                            <Entry x:Name="BancoEntry" Placeholder="{helpers:Translate strDigiteBanco}"/>
                         </StackLayout>
                     </Grid>
                     <!-- Credenciais de Acesso (SQL Server e MySQL) -->
@@ -74,26 +93,26 @@ TextColor="{AppThemeBinding Light=#0056B3, Dark=#66B2FF}"/>
                     <Grid x:Name="CredenciaisGrid" ColumnDefinitions="*,*" ColumnSpacing="10">
 
                         <StackLayout Spacing="5" Grid.Column="0">
-                            <Label Text="Usuário"/>
-                            <Entry x:Name="UsuarioEntry" Placeholder="Digite o usuário..."/>
+                            <Label Text="{helpers:Translate strUsuario}"/>
+                            <Entry x:Name="UsuarioEntry" Placeholder="{helpers:Translate strDigiteUsuario}"/>
                         </StackLayout>
 
                         <StackLayout Spacing="5" Grid.Column="1">
 
-                            <Label Text="Senha"/>
-                            <Entry x:Name="SenhaEntry" Placeholder="Digite a senha..." IsPassword="True"/>
+                            <Label Text="{helpers:Translate strSenha}"/>
+                            <Entry x:Name="SenhaEntry" Placeholder="{helpers:Translate strDigiteSenha}" IsPassword="True"/>
                         </StackLayout>
                     </Grid>
                     <!-- Complemento / Parâmetros adicionais da connection string -->
 
                     <StackLayout Spacing="5">
 
-                        <Label x:Name="ComplementoLabel" Text="Complemento"/>
-                        <Entry x:Name="ComplementoEntry" Placeholder="Digite o complemento..."/>
+                        <Label x:Name="ComplementoLabel" Text="{helpers:Translate strComplemento}"/>
+                        <Entry x:Name="ComplementoEntry" Placeholder="{helpers:Translate strDigiteComplemento}"/>
                     </StackLayout>
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="15,10">
-                        <Button Grid.Column="0" Text="Cancelar" Clicked="OnCancelarClicked" Style="{StaticResource ButtonSecondary}" HeightRequest="45"/>
-                        <Button Grid.Column="1" Text="Salvar BD" Clicked="OnSalvarBdClicked" Style="{StaticResource ButtonPrimary}" HeightRequest="45"/>
+                        <Button Grid.Column="0" Text="{helpers:Translate strCancelar}" Clicked="OnCancelarClicked" Style="{StaticResource ButtonSecondary}" HeightRequest="45"/>
+                        <Button Grid.Column="1" Text="{helpers:Translate strSalvarBd}" Clicked="OnSalvarBdClicked" Style="{StaticResource ButtonPrimary}" HeightRequest="45"/>
                     </Grid>
                 </StackLayout>
             </Border>

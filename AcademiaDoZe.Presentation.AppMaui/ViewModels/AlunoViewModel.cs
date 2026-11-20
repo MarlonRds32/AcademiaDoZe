@@ -1,3 +1,4 @@
+using AcademiaDoZe.Presentation.AppMaui.Helpers;
 using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Application.Interfaces;
 using CommunityToolkit.Mvvm.Input;
@@ -44,7 +45,7 @@ public partial class AlunoViewModel : BaseViewModel
     {
         _alunoService = alunoService;
         _logradouroService = logradouroService;
-        Title = "Detalhes do Aluno";
+        Title = L.T("strDetalhesAluno");
     }
 
     public async Task InitializeAsync()
@@ -53,13 +54,13 @@ public partial class AlunoViewModel : BaseViewModel
         if (AlunoId > 0)
         {
             IsEditMode = true;
-            Title = "Editar Aluno";
+            Title = L.T("strEditarAluno");
             await LoadAlunoAsync();
         }
         else
         {
             IsEditMode = false;
-            Title = "Novo Aluno";
+            Title = L.T("strNovoAluno");
             Aluno = CriarAlunoPadrao();
             NotificarStatusEndereco();
         }
@@ -129,11 +130,11 @@ public partial class AlunoViewModel : BaseViewModel
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "O carregamento do aluno expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgCargaAlunoExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao carregar aluno: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroCarregarAluno", ex.Message), "OK");
         }
         finally
         {
@@ -146,13 +147,13 @@ public partial class AlunoViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(Aluno.Cpf))
         {
-            await Shell.Current.DisplayAlertAsync("Aviso", "Informe o CPF para realizar a busca.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("strInformeCpfBusca"), "OK");
             return;
         }
         var apenasDigitos = new string([.. Aluno.Cpf.Where(char.IsDigit)]);
         if (apenasDigitos.Length != 11)
         {
-            await Shell.Current.DisplayAlertAsync("Validação", "O CPF deve conter exatamente 11 dígitos numéricos.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgCpf11"), "OK");
             return;
         }
         try
@@ -180,22 +181,22 @@ public partial class AlunoViewModel : BaseViewModel
                 Aluno = alunoData;
                 AlunoId = alunoData.Id;
                 IsEditMode = true;
-                Title = "Editar Aluno";
+                Title = L.T("strEditarAluno");
                 NotificarStatusEndereco();
-                await Shell.Current.DisplayAlertAsync("Aviso", "Aluno já cadastrado! Dados carregados para edição.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgAlunoJaCadastrado"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Aviso", "CPF não encontrado.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgCpfNaoEncontrado"), "OK");
             }
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A busca por CPF expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgBuscaCpfExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao buscar CPF: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroBuscarCpf", ex.Message), "OK");
         }
         finally
         {
@@ -208,13 +209,13 @@ public partial class AlunoViewModel : BaseViewModel
     {
         if (Aluno.Endereco == null || string.IsNullOrWhiteSpace(Aluno.Endereco.Cep))
         {
-            await Shell.Current.DisplayAlertAsync("Aviso", "Informe o CEP para realizar a busca.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgInformeCep"), "OK");
             return;
         }
         var apenasDigitos = new string([.. Aluno.Endereco.Cep.Where(char.IsDigit)]);
         if (apenasDigitos.Length != 8)
         {
-            await Shell.Current.DisplayAlertAsync("Validação", "O CEP deve conter exatamente 8 dígitos numéricos.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgCep8"), "OK");
             return;
         }
         try
@@ -227,20 +228,20 @@ public partial class AlunoViewModel : BaseViewModel
                 Aluno.Endereco = logradouroData;
                 OnPropertyChanged(nameof(Aluno));
                 NotificarStatusEndereco();
-                await Shell.Current.DisplayAlertAsync("Aviso", "CEP encontrado! Endereço preenchido automaticamente.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgCepEncontrado"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Aviso", "CEP não encontrado no cadastro de logradouros. Cadastre o logradouro primeiro.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgCepNaoCadastrado"), "OK");
             }
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A busca de CEP expirou. Verifique a conexão com o banco.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgBuscaCepExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao buscar CEP: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroBuscarCep", ex.Message), "OK");
         }
         finally
         {
@@ -272,13 +273,13 @@ public partial class AlunoViewModel : BaseViewModel
                     }
                     else
                     {
-                        await Shell.Current.DisplayAlertAsync("Endereço Obrigatório", "O CEP informado não está cadastrado como Logradouro. Cadastre-o previamente.", "OK");
+                        await Shell.Current.DisplayAlertAsync(L.T("strEnderecoObrigatorio"), L.T("msgCepNaoLogradouro"), "OK");
                         return;
                     }
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlertAsync("Validação", "Informe um CEP válido com 8 dígitos para o endereço.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgCepValido8"), "OK");
                     return;
                 }
             }
@@ -293,30 +294,30 @@ public partial class AlunoViewModel : BaseViewModel
             if (IsEditMode)
             {
                 await _alunoService.AtualizarAsync(Aluno, cts.Token);
-                await Shell.Current.DisplayAlertAsync("Sucesso", "Aluno atualizado com sucesso!", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strSucesso"), L.T("msgAlunoAtualizado"), "OK");
             }
             else
             {
                 await _alunoService.AdicionarAsync(Aluno, cts.Token);
-                await Shell.Current.DisplayAlertAsync("Sucesso", "Aluno criado com sucesso!", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strSucesso"), L.T("msgAlunoCriado"), "OK");
             }
             await Shell.Current.GoToAsync("..");
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A gravação do aluno expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgGravacaoAlunoExpirou"), "OK");
         }
         catch (InvalidOperationException ex)
         {
-            await Shell.Current.DisplayAlertAsync("Regra de Negócio", ex.Message, "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strRegraNegocio"), ex.Message, "OK");
         }
         catch (ArgumentException ex)
         {
-            await Shell.Current.DisplayAlertAsync("Validação", ex.Message, "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), ex.Message, "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao salvar aluno: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroSalvarAluno", ex.Message), "OK");
         }
         finally
         {
@@ -329,23 +330,23 @@ public partial class AlunoViewModel : BaseViewModel
     {
         try
         {
-            string escolha = await Shell.Current.DisplayActionSheetAsync("Origem da Imagem", "Cancelar", "Remover Foto", "Galeria", "Câmera");
-            if (escolha == "Remover Foto")
+            string escolha = await Shell.Current.DisplayActionSheetAsync(L.T("strOrigemImagem"), L.T("strCancelar"), L.T("strRemoverFoto"), L.T("strGaleria"), L.T("strCamera"));
+            if (escolha == L.T("strRemoverFoto"))
             {
                 Aluno.Foto = null;
                 OnPropertyChanged(nameof(Aluno));
                 return;
             }
             FileResult? result = null;
-            if (escolha == "Galeria")
+            if (escolha == L.T("strGaleria"))
             {
                 result = await FilePicker.Default.PickAsync(new PickOptions
                 {
-                    PickerTitle = "Selecione uma imagem",
+                    PickerTitle = L.T("strSelecioneImagem"),
                     FileTypes = FilePickerFileType.Images
                 });
             }
-            else if (escolha == "Câmera")
+            else if (escolha == L.T("strCamera"))
             {
                 if (MediaPicker.Default.IsCaptureSupported)
                 {
@@ -353,7 +354,7 @@ public partial class AlunoViewModel : BaseViewModel
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlertAsync("Erro", "Captura de foto não suportada neste dispositivo.", "OK");
+                    await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.T("msgCapturaNaoSuportada"), "OK");
                     return;
                 }
             }
@@ -368,7 +369,7 @@ public partial class AlunoViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao selecionar imagem: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroSelecionarImagem", ex.Message), "OK");
         }
     }
 
@@ -381,46 +382,46 @@ public partial class AlunoViewModel : BaseViewModel
         var errors = new List<string>();
         if (string.IsNullOrWhiteSpace(aluno.Nome))
         {
-            errors.Add("• Nome é obrigatório.");
+            errors.Add(L.T("valNome"));
         }
         if (string.IsNullOrWhiteSpace(aluno.Cpf))
         {
-            errors.Add("• CPF é obrigatório.");
+            errors.Add(L.T("valCpf"));
         }
         else
         {
             var apenasDigitosCpf = new string([.. aluno.Cpf.Where(char.IsDigit)]);
             if (apenasDigitosCpf.Length != 11)
             {
-                errors.Add("• CPF deve conter exatamente 11 dígitos numéricos.");
+                errors.Add(L.T("valCpf11"));
             }
         }
         if (aluno.DataNascimento == default)
         {
-            errors.Add("• Data de nascimento é obrigatória.");
+            errors.Add(L.T("valNascimento"));
         }
         else
         {
             var hoje = DateOnly.FromDateTime(DateTime.Today);
             if (aluno.DataNascimento > hoje)
             {
-                errors.Add("• Data de nascimento não pode ser futura.");
+                errors.Add(L.T("valNascimentoFutura"));
             }
             else if (aluno.DataNascimento > DateOnly.FromDateTime(DateTime.Today.AddYears(-12)))
             {
-                errors.Add("• O aluno deve ter no mínimo 12 anos de idade.");
+                errors.Add(L.T("valAluno12"));
             }
         }
         if (string.IsNullOrWhiteSpace(aluno.Telefone))
         {
-            errors.Add("• Telefone é obrigatório.");
+            errors.Add(L.T("valTelefone"));
         }
         else
         {
             var apenasDigitosTel = new string([.. aluno.Telefone.Where(char.IsDigit)]);
             if (apenasDigitosTel.Length != 11)
             {
-                errors.Add("• Telefone deve conter 11 dígitos numéricos com DDD.");
+                errors.Add(L.T("valTelefone11"));
             }
         }
         if (!string.IsNullOrWhiteSpace(aluno.Email))
@@ -428,7 +429,7 @@ public partial class AlunoViewModel : BaseViewModel
             var emailLimpo = aluno.Email.Trim();
             if (!ValidarFormatoEmail(emailLimpo))
             {
-                errors.Add("• Formato de e-mail inválido.");
+                errors.Add(L.T("valEmail"));
             }
         }
         // Senha: obrigatória no cadastro; na edição só valida se foi preenchida
@@ -436,18 +437,18 @@ public partial class AlunoViewModel : BaseViewModel
         {
             if (string.IsNullOrWhiteSpace(aluno.Senha))
             {
-                errors.Add("• Senha é obrigatória no cadastro.");
+                errors.Add(L.T("valSenha"));
             }
             else
             {
                 var senhaLimpa = aluno.Senha.Trim();
                 if (senhaLimpa.Length < 6 || !senhaLimpa.Any(char.IsUpper))
                 {
-                    errors.Add("• A senha deve ter no mínimo 6 caracteres e pelo menos uma letra maiúscula.");
+                    errors.Add(L.T("valSenha6"));
                 }
                 if (aluno.Senha != confirmarSenha)
                 {
-                    errors.Add("• A confirmação de senha não confere com a senha informada.");
+                    errors.Add(L.T("valSenhaConfere"));
                 }
             }
         }
@@ -456,25 +457,25 @@ public partial class AlunoViewModel : BaseViewModel
             var senhaLimpa = aluno.Senha.Trim();
             if (senhaLimpa.Length < 6 || !senhaLimpa.Any(char.IsUpper))
             {
-                errors.Add("• A nova senha deve ter no mínimo 6 caracteres e pelo menos uma letra maiúscula.");
+                errors.Add(L.T("valNovaSenha6"));
             }
             if (aluno.Senha != confirmarSenha)
             {
-                errors.Add("• A confirmação de senha não confere com a nova senha informada.");
+                errors.Add(L.T("valNovaSenhaConfere"));
             }
         }
         if (aluno.Endereco == null || string.IsNullOrWhiteSpace(aluno.Endereco.Cep))
         {
-            errors.Add("• CEP do endereço é obrigatório.");
+            errors.Add(L.T("valCepEndereco"));
         }
         if (string.IsNullOrWhiteSpace(aluno.Numero))
         {
-            errors.Add("• Número do endereço é obrigatório.");
+            errors.Add(L.T("valNumeroEndereco"));
         }
         if (errors.Count > 0)
         {
-            var mensagem = "Por favor, corrija os seguintes campos:\n\n" + string.Join("\n", errors);
-            await Shell.Current.DisplayAlertAsync("Erros de Validação", mensagem, "OK");
+            var mensagem = L.T("msgCorrijaCampos") + "\n\n" + string.Join("\n", errors);
+            await Shell.Current.DisplayAlertAsync(L.T("strErrosValidacao"), mensagem, "OK");
             return false;
         }
         return true;

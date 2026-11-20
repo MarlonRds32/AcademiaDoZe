@@ -1,4 +1,5 @@
-﻿using AcademiaDoZe.Application.DTOs;
+﻿using AcademiaDoZe.Presentation.AppMaui.Helpers;
+using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Application.Interfaces;
 using CommunityToolkit.Mvvm.Input;
 namespace AcademiaDoZe.Presentation.AppMaui.ViewModels;
@@ -36,7 +37,7 @@ public partial class LogradouroViewModel : BaseViewModel
     public LogradouroViewModel(ILogradouroService logradouroService)
     {
         _logradouroService = logradouroService;
-        Title = "Detalhes do Logradouro";
+        Title = L.T("strDetalhesLogradouro");
     }
 
     public async Task InitializeAsync()
@@ -44,13 +45,13 @@ public partial class LogradouroViewModel : BaseViewModel
         if (LogradouroId > 0)
         {
             IsEditMode = true;
-            Title = "Editar Logradouro";
+            Title = L.T("strEditarLogradouro");
             await LoadLogradouroAsync();
         }
         else
         {
             IsEditMode = false;
-            Title = "Novo Logradouro";
+            Title = L.T("strNovoLogradouro");
             Logradouro = new LogradouroDto
             {
                 Cep = string.Empty,
@@ -84,11 +85,11 @@ public partial class LogradouroViewModel : BaseViewModel
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "O carregamento do logradouro expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgCargaLogradouroExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao carregar logradouro: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroCarregarLogradouro", ex.Message), "OK");
         }
         finally
         {
@@ -101,13 +102,13 @@ public partial class LogradouroViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(Logradouro.Cep))
         {
-            await Shell.Current.DisplayAlertAsync("Aviso", "Informe o CEP para realizar a busca.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgInformeCep"), "OK");
             return;
         }
         var apenasDigitos = new string([.. Logradouro.Cep.Where(char.IsDigit)]);
         if (apenasDigitos.Length != 8)
         {
-            await Shell.Current.DisplayAlertAsync("Validação", "O CEP deve conter exatamente 8 dígitos numéricos.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), L.T("msgCep8"), "OK");
             return;
         }
         try
@@ -120,21 +121,21 @@ public partial class LogradouroViewModel : BaseViewModel
                 Logradouro = logradouroData;
                 LogradouroId = logradouroData.Id;
                 IsEditMode = true;
-                Title = "Editar Logradouro";
-                await Shell.Current.DisplayAlertAsync("Aviso", "CEP já cadastrado! Dados carregados para edição.", "OK");
+                Title = L.T("strEditarLogradouro");
+                await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgCepJaCadastrado"), "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlertAsync("Aviso", "CEP não encontrado.", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strAviso"), L.T("msgCepNaoEncontrado"), "OK");
             }
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A busca do CEP expirou. Verifique a conexão com o banco.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgBuscaDoCepExpirou"), "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao buscar CEP: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroBuscarCep", ex.Message), "OK");
         }
         finally
         {
@@ -163,30 +164,30 @@ public partial class LogradouroViewModel : BaseViewModel
             if (IsEditMode)
             {
                 await _logradouroService.AtualizarAsync(Logradouro, cts.Token);
-                await Shell.Current.DisplayAlertAsync("Sucesso", "Logradouro atualizado com sucesso!", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strSucesso"), L.T("msgLogradouroAtualizado"), "OK");
             }
             else
             {
                 await _logradouroService.AdicionarAsync(Logradouro, cts.Token);
-                await Shell.Current.DisplayAlertAsync("Sucesso", "Logradouro criado com sucesso!", "OK");
+                await Shell.Current.DisplayAlertAsync(L.T("strSucesso"), L.T("msgLogradouroCriado"), "OK");
             }
             await Shell.Current.GoToAsync("..");
         }
         catch (OperationCanceledException)
         {
-            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A gravação do logradouro expirou. Verifique a conexão.", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strTempoEsgotado"), L.T("msgGravacaoLogradouroExpirou"), "OK");
         }
         catch (InvalidOperationException ex)
         {
-            await Shell.Current.DisplayAlertAsync("Regra de Negócio", ex.Message, "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strRegraNegocio"), ex.Message, "OK");
         }
         catch (ArgumentException ex)
         {
-            await Shell.Current.DisplayAlertAsync("Validação", ex.Message, "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strValidacao"), ex.Message, "OK");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao salvar logradouro: {ex.Message}", "OK");
+            await Shell.Current.DisplayAlertAsync(L.T("strErro"), L.F("msgErroSalvarLogradouro", ex.Message), "OK");
         }
         finally
         {
@@ -204,53 +205,53 @@ Isso permite que o usuário veja todos os problemas de uma vez e corrija-os ante
         // Validação do CEP
         if (string.IsNullOrWhiteSpace(logradouro.Cep))
         {
-            errors.Add("• CEP é obrigatório.");
+            errors.Add(L.T("valCep"));
         }
         else
         {
             var cepDigitos = new string([.. logradouro.Cep.Where(char.IsDigit)]);
             if (cepDigitos.Length != 8)
             {
-                errors.Add("• O CEP deve conter exatamente 8 dígitos numéricos.");
+                errors.Add(L.T("valCep8"));
             }
         }
         // Validação do Logradouro / Nome
         if (string.IsNullOrWhiteSpace(logradouro.Nome))
         {
-            errors.Add("• Logradouro / Rua é obrigatório.");
+            errors.Add(L.T("valRua"));
         }
         // Validação do Bairro
         if (string.IsNullOrWhiteSpace(logradouro.Bairro))
         {
-            errors.Add("• Bairro é obrigatório.");
+            errors.Add(L.T("valBairro"));
         }
         // Validação da Cidade
         if (string.IsNullOrWhiteSpace(logradouro.Cidade))
         {
-            errors.Add("• Cidade é obrigatória.");
+            errors.Add(L.T("valCidade"));
         }
         // Validação do Estado (UF)
         if (string.IsNullOrWhiteSpace(logradouro.Estado))
         {
-            errors.Add("• Estado (UF) é obrigatório.");
+            errors.Add(L.T("valEstado"));
         }
         else
         {
             var estadoLimpo = logradouro.Estado.Trim();
             if (estadoLimpo.Length != 2 || !estadoLimpo.All(char.IsLetter))
             {
-                errors.Add("• O Estado deve conter a sigla UF de 2 letras (ex: SC, SP).");
+                errors.Add(L.T("valEstadoUf"));
             }
         }
         // Validação do País
         if (string.IsNullOrWhiteSpace(logradouro.Pais))
         {
-            errors.Add("• País é obrigatório.");
+            errors.Add(L.T("valPais"));
         }
         if (errors.Count > 0)
         {
-            var mensagem = "Por favor, corrija os seguintes campos:\n\n" + string.Join("\n", errors);
-            await Shell.Current.DisplayAlertAsync("Erros de Validação", mensagem, "OK");
+            var mensagem = L.T("msgCorrijaCampos") + "\n\n" + string.Join("\n", errors);
+            await Shell.Current.DisplayAlertAsync(L.T("strErrosValidacao"), mensagem, "OK");
             return false;
         }
         return true;

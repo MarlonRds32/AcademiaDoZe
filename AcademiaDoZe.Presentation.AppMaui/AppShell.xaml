@@ -1,65 +1,70 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-x:Class="AcademiaDoZe.Presentation.AppMaui.AppShell"
-xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-xmlns:local="clr-namespace:AcademiaDoZe.Presentation.AppMaui"
-xmlns:views="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Views"
-Title="Academia do Zé">
-    <!--
-<ShellContent
-Title="Home"
-ContentTemplate="{DataTemplate local:MainPage}"
-Route="MainPage" />
--->
-    <FlyoutItem Title="Dashboard">
-        <!-- Icon="location_icon.png" -->
+    x:Class="AcademiaDoZe.Presentation.AppMaui.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:AcademiaDoZe.Presentation.AppMaui"
+    xmlns:views="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Views"
+    xmlns:helpers="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Helpers"
+    Title="{helpers:Translate strTitulo}">
+
+    <!-- Cabeçalho do menu: bandeira do idioma atual + nome da aplicação -->
+    <Shell.FlyoutHeader>
+        <Grid Padding="16,18" BackgroundColor="{StaticResource Ink}">
+            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                <Image Source="{helpers:Translate strBandeira}" HeightRequest="28" WidthRequest="42" Aspect="AspectFit"/>
+                <Label Text="{helpers:Translate strTitulo}" VerticalOptions="Center" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Lime}"/>
+            </HorizontalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="{helpers:Translate strDashboard}">
         <FlyoutItem.Icon>
-            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe871;" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe871;" Color="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
         </FlyoutItem.Icon>
         <ShellContent ContentTemplate="{DataTemplate views:DashboardListPage}" Route="dashboard" />
     </FlyoutItem>
-    
-    <FlyoutItem Title="Logradouros">
+
+    <FlyoutItem Title="{helpers:Translate strLogradouro}">
         <FlyoutItem.Icon>
-            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xea40;" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xea40;" Color="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
         </FlyoutItem.Icon>
         <ShellContent ContentTemplate="{DataTemplate views:LogradouroListPage}" Route="logradouros" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Colaboradores">
+    <FlyoutItem Title="{helpers:Translate strColaborador}">
         <FlyoutItem.Icon>
-            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xea67;" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xea67;" Color="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
         </FlyoutItem.Icon>
         <ShellContent ContentTemplate="{DataTemplate views:ColaboradorListPage}" Route="colaboradores" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Alunos">
+    <FlyoutItem Title="{helpers:Translate strAluno}">
         <FlyoutItem.Icon>
-            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe7fd;" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe7fd;" Color="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
         </FlyoutItem.Icon>
         <ShellContent ContentTemplate="{DataTemplate views:AlunoListPage}" Route="alunos" />
     </FlyoutItem>
 
-	<FlyoutItem Title="Matrículas">
-		<FlyoutItem.Icon>
-			<FontImageSource FontFamily="MaterialIcons" Glyph="&#xefec;" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
-		</FlyoutItem.Icon>
-		<ShellContent ContentTemplate="{DataTemplate views:MatriculaListPage}" Route="matriculas" />
-	</FlyoutItem>
-
-
-	<FlyoutItem Title="Configurações">
+    <FlyoutItem Title="{helpers:Translate strMatricula}">
         <FlyoutItem.Icon>
-            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b8;" Color="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xefec;" Color="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
         </FlyoutItem.Icon>
-        <ShellContent ContentTemplate="{DataTemplate views:ConfigPage}" Route="configuracoes"/>
+        <ShellContent ContentTemplate="{DataTemplate views:MatriculaListPage}" Route="matriculas" />
     </FlyoutItem>
-    
-    <!--
-<TabBar>
-<ShellContent Title="Dashboard" ContentTemplate="{DataTemplate views:DashboardListPage}" Route="dashboard" />
-<ShellContent Title="Logradouros" ContentTemplate="{DataTemplate views:LogradouroListPage}" Route="logradouros" />
-</TabBar>
--->
+
+    <FlyoutItem Title="{helpers:Translate strControleAcesso}">
+        <FlyoutItem.Icon>
+            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe897;" Color="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
+        </FlyoutItem.Icon>
+        <ShellContent ContentTemplate="{DataTemplate views:AcessoPage}" Route="acesso" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="{helpers:Translate strConfiguracao}">
+        <FlyoutItem.Icon>
+            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b8;" Color="{AppThemeBinding Light={StaticResource Ink}, Dark={StaticResource Paper}}"/>
+        </FlyoutItem.Icon>
+        <ShellContent ContentTemplate="{DataTemplate views:ConfigPage}" Route="configuracoes" />
+    </FlyoutItem>
+
 </Shell>
